@@ -3,8 +3,7 @@ import time
 import json
 import math
 import urllib.request
-from datetime import datetime
-import pytz
+from datetime import datetime, timezone, timedelta
 from flask import Flask, request, jsonify, send_file
 
 app = Flask(__name__)
@@ -18,6 +17,14 @@ def after_request(response):
     return response
 
 FIREBASE_URL = "https://reseller-c0cf4-default-rtdb.firebaseio.com"
+
+# --- BUILT-IN IST DATETIME (NO PYTZ NEEDED) ---
+def get_ist_datetime_str():
+    try:
+        ist_zone = timezone(timedelta(hours=5, minutes=30))
+        return datetime.now(ist_zone).strftime("%d %b %Y, %H:%M")
+    except Exception:
+        return datetime.utcnow().strftime("%d %b %Y, %H:%M")
 
 # --- FIREBASE REST API HELPERS ---
 def fb_request(endpoint, data=None, method='GET'):
@@ -47,13 +54,6 @@ def fb_patch(endpoint, data):
 def fb_delete(endpoint):
     res = fb_request(endpoint, method='DELETE')
     return res is not None
-
-def get_ist_datetime_str():
-    try:
-        ist = pytz.timezone('Asia/Kolkata')
-        return datetime.now(ist).strftime("%d %b %Y, %H:%M")
-    except Exception:
-        return datetime.utcnow().strftime("%d %b %Y, %H:%M")
 
 def add_transaction(user, tx_type, amount, details):
     now_ts = int(time.time() * 1000)
@@ -204,7 +204,6 @@ def reseller_login():
         "balance": reseller.get('balance', 0.0)
     })
 
-# RESELLER DATA + TRANSACTIONS LIST
 @app.route('/reseller/data', methods=['GET'])
 def reseller_data():
     user = request.args.get('username', '').strip().lower()
@@ -213,7 +212,6 @@ def reseller_data():
     if not reseller or not isinstance(reseller, dict):
         return jsonify({"success": False, "msg": "User not found"}), 404
 
-    # 1. Fetch Keys
     all_keys = fb_get("keys") or {}
     items = []
     if isinstance(all_keys, dict):
@@ -224,7 +222,6 @@ def reseller_data():
     user_keys = [v for v in items if str(v.get('reseller', '')).lower() == user]
     user_keys.sort(key=lambda x: x.get('expiry_timestamp', 0), reverse=True)
 
-    # 2. Fetch Transactions (Sorted Newest First)
     tx_raw = reseller.get("transactions", {})
     user_txs = []
     if isinstance(tx_raw, dict):
@@ -269,7 +266,6 @@ def update_contact():
 
     return jsonify({"success": True, "msg": "WhatsApp aur Telegram links update ho gaye!"})
 
-# KEY GENERATE + AUTO DEBIT TRANSACTION
 @app.route('/reseller/generate_key', methods=['POST'])
 def reseller_generate_key():
     user = request.form.get('username', '').strip().lower()
@@ -294,7 +290,6 @@ def reseller_generate_key():
     if not reseller or not isinstance(reseller, dict) or float(reseller.get('balance', 0.0)) < cost:
         return jsonify({"success": False, "msg": f"Balance kam hai! ₹{cost:.0f} chahiye ({days} Din ke liye)."}), 400
 
-    # Wallet se amount deduct karein
     new_bal = float(reseller.get('balance', 0.0)) - cost
     fb_patch(f"resellers/{user}", {"balance": new_bal})
 
@@ -310,7 +305,6 @@ def reseller_generate_key():
     }
 
     if fb_put(f"keys/{key}", key_data):
-        # Transaction history me debit record karein
         add_transaction(user, "debit", cost, f"{key} day × {days}")
         return jsonify({"success": True, "key": key, "cost": cost, "days": days})
     return jsonify({"success": False, "msg": "Key generate fail!"}), 500
