@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0E1022;
+            --card: #15182E;
+            --card-inner: #0E1124;
+            --input: #121528;
+            --primary: #4F6BFF;
+            --primary-glow: rgba(79, 107, 255, 0.25);
+            --success: #10B981;
+            --danger: #EF4444;
+            --debit-badge: #FF4D6D;
+            --text-main: #FFFFFF;
+            --text-muted: #8E96B5;
+            --border: #222744;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 16px 14px 85px 14px; /* Bottom bar ke liye space */
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 1. LOGIN SCREEN */
+        #loginView {
+            max-width: 380px;
+            margin: 80px auto;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .login-title {
+            font-size: 20px;
+            font-weight: 800;
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 22px;
+        }
+
+        /* Top Header */
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #60A5FA;
+        }
+
+        .user-logout-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .btn-logout {
+            background: none;
+            border: none;
+            color: #EF4444;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Balance Card (Screenshot Match) */
+        .balance-card {
+            background: linear-gradient(135deg, #181C38, #14172E);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 18px;
+            margin-bottom: 16px;
+        }
+
+        .balance-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .balance-subtext {
+            font-size: 12px;
+            color: #7983A8;
+        }
+
+        /* Card Box */
+        .card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        .card-header-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        /* Form Controls */
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            background-color: var(--input);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            outline: none;
+            color-scheme: dark;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* Table (Exact Screenshot Match) */
+        .tx-table-container {
+            overflow-x: auto;
+        }
+
+        .tx-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .tx-table th {
+            text-align: left;
+            padding: 10px 8px;
+            color: #6C7598;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tx-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #1A1E38;
+            vertical-align: middle;
+        }
+
+        .tx-date {
+            color: var(--text-main);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Pill Badge: Debit / Credit */
+        .badge-tx {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        .badge-debit {
+            background-color: rgba(255, 77, 109, 0.15);
+            color: var(--debit-badge);
+            border: 1px solid rgba(255, 77, 109, 0.25);
+        }
+
+        .badge-credit {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .tx-amount-debit {
+            color: #FF5A79;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tx-amount-credit {
+            color: #34D399;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tx-details {
+            color: #8E96B5;
+            font-family: monospace;
+            font-size: 11px;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Bottom Navigation Bar (Screenshot Match) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            background-color: #121528;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #6C7598;
+            cursor: pointer;
+            height: 100%;
+            transition: 0.2s;
+        }
+
+        .nav-item.active {
+            color: #FFFFFF;
+        }
+
+        .nav-item.active .nav-btn-pill {
+            background-color: #4F6BFF;
+            color: #FFFFFF;
+            padding: 6px 18px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Keys Item */
+        .key-box {
+            background-color: var(--card-inner);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .key-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .key-code {
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: #60A5FA;
+        }
+
+        .btn-act {
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-copy { background: rgba(79, 107, 255, 0.2); color: #818CF8; }
+        .btn-del { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="loginView">
+        <h2 class="login-title">RESELLER LOGIN</h2>
+        <form onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label>User ID</label>
+                <input type="text" id="log_user" placeholder="Enter reseller ID" required>
+            </div>
+            <div class="input-group" style="margin-bottom: 18px;">
+                <label>Password</label>
+                <input type="password" id="log_pass" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn-submit">LOGIN TO DASHBOARD</button>
+        </form>
+    </div>
+
+    <!-- 2. DASHBOARD VIEW -->
+    <div id="dashView" style="display: none;">
+
+        <!-- Top Header -->
+        <div class="panel-header">
+            <div>
+                <div class="panel-title">🏪 Seller Panel</div>
+                <div style="font-size: 11px; color: #6C7598; margin-top: 2px;" id="dispDateTime">--</div>
+            </div>
+            <div class="user-logout-row">
+                <span id="dispUser">👤 User</span>
+                <button class="btn-logout" onclick="logout()">↪ Logout</button>
+            </div>
+        </div>
+
+        <!-- TAB 1: BALANCE & TRANSACTIONS (SCREENSHOT PAGE) -->
+        <div id="tabBalanceView">
+            
+            <!-- AAPKA BALANCE CARD -->
+            <div class="balance-card">
+                <div class="balance-label">💳 AAPKA BALANCE</div>
+                <div class="balance-amount" id="statBalance">₹0.00</div>
+                <div class="balance-subtext">Key generate karne par price balance se cut hoga</div>
+            </div>
+
+            <!-- TRANSACTIONS HISTORY TABLE -->
+            <div class="card">
+                <div class="card-header-title">
+                    <span>⇄ Transactions</span>
+                    <span id="txCountBadge" style="color: #6C7598; font-size: 12px;">(0)</span>
+                </div>
+
+                <div class="tx-table-container">
+                    <table class="tx-table">
+                        <thead>
+                            <tr>
+                                <th>DATE</th>
+                                <th>TYPE</th>
+                                <th>AMOUNT</th>
+                                <th>DETAILS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="txTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 25px;">
+                                    Loading transactions...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TAB 2: KEYS GENERATE & MANAGE VIEW -->
+        <div id="tabKeysView" style="display: none;">
+            
+            <!-- Key Generate Card -->
+            <div class="card">
+                <div class="card-header-title">
+                    <span>🔑 Generate VIP Key</span>
+                    <span style="font-size: 12px; color: #60A5FA; cursor: pointer;" onclick="makeRandomKey()">⚡ Random Key</span>
+                </div>
+                <form onsubmit="generateKey(event)">
+                    <div class="input-group">
+                        <label>License Key</label>
+                        <input type="text" id="new_key" placeholder="VIP-XXXX-XXXX" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Select Expiry Date <span id="daysSummary" style="color: #60A5FA;">(1 Din)</span></label>
+                        <input type="date" id="exp_date" required onchange="calculateAutoPrice()">
+                    </div>
+                    <div class="input-group">
+                        <label>Auto Price (₹100/Din - Locked)</label>
+                        <input type="number" id="key_cost" value="100" readonly style="background-color: #121526; color: #34D399; font-weight: 800; cursor: not-allowed;">
+                    </div>
+                    <button type="submit" class="btn-submit">CREATE LICENSE KEY</button>
+                </form>
+            </div>
+
+            <!-- Keys List -->
+            <div class="card">
+                <div class="card-header-title">
+                    <span>Generated Keys</span>
+                    <button class="btn-act btn-copy" onclick="loadDashboard()">REFRESH</button>
+                </div>
+                <div id="keysContainer">
+                    <div style="text-align: center; color: var(--text-muted); padding: 20px;">Loading keys...</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TAB 3: CONTACT LINKS VIEW -->
+        <div id="tabContactView" style="display: none;">
+            <div class="card">
+                <div class="card-header-title">📱 Dialog Contact Links</div>
+                <form onsubmit="updateContactLinks(event)">
+                    <div class="input-group">
+                        <label>WhatsApp Link / Number</label>
+                        <input type="text" id="contact_whatsapp" placeholder="https://wa.me/919999999999" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Telegram Link / Username</label>
+                        <input type="text" id="contact_telegram" placeholder="https://t.me/your_username" required>
+                    </div>
+                    <button type="submit" class="btn-submit">SAVE CONTACT LINKS</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- BOTTOM NAVIGATION BAR (SCREENSHOT MATCH) -->
+<div class="bottom-nav" id="bottomNavBar" style="display: none;">
+    <div class="nav-item" id="navItemKeys" onclick="switchTab('keys')">
+        <span style="font-size: 16px;">🔑</span>
+        <span>Keys</span>
+    </div>
+    <div class="nav-item active" id="navItemBalance" onclick="switchTab('balance')">
+        <div class="nav-btn-pill">
+            <span>💳</span>
+            <span>Balance</span>
+        </div>
+    </div>
+    <div class="nav-item" id="navItemContact" onclick="switchTab('contact')">
+        <span style="font-size: 16px;">📱</span>
+        <span>Contact</span>
+    </div>
+</div>
+
+<script>
+    const API_BASE = "https://vip-auth-api-1.onrender.com";
+    let currentUser = localStorage.getItem('reseller_user') || '';
+    let currentServerTime = 0;
+    let calculatedTimestamp = 0;
+
+    // Tab Switcher
+    function switchTab(tab) {
+        document.getElementById('tabBalanceView').style.display = tab === 'balance' ? 'block' : 'none';
+        document.getElementById('tabKeysView').style.display = tab === 'keys' ? 'block' : 'none';
+        document.getElementById('tabContactView').style.display = tab === 'contact' ? 'block' : 'none';
+
+        // Nav active highlight
+        document.getElementById('navItemKeys').className = 'nav-item' + (tab === 'keys' ? ' active' : '');
+        document.getElementById('navItemBalance').className = 'nav-item' + (tab === 'balance' ? ' active' : '');
+        document.getElementById('navItemContact').className = 'nav-item' + (tab === 'contact' ? ' active' : '');
+
+        document.getElementById('navItemKeys').innerHTML = tab === 'keys' ? '<div class="nav-btn-pill"><span>🔑</span><span>Keys</span></div>' : '<span style="font-size:16px;">🔑</span><span>Keys</span>';
+        document.getElementById('navItemBalance').innerHTML = tab === 'balance' ? '<div class="nav-btn-pill"><span>💳</span><span>Balance</span></div>' : '<span style="font-size:16px;">💳</span><span>Balance</span>';
+        document.getElementById('navItemContact').innerHTML = tab === 'contact' ? '<div class="nav-btn-pill"><span>📱</span><span>Contact</span></div>' : '<span style="font-size:16px;">📱</span><span>Contact</span>';
+    }
+
+    function initDatePicker() {
+        const baseDate = currentServerTime > 0 ? new Date(currentServerTime) : new Date();
+        baseDate.setDate(baseDate.getDate() + 1);
+
+        const yyyy = baseDate.getFullYear();
+        const mm = String(baseDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(baseDate.getDate()).padStart(2, '0');
+        const minStr = `${yyyy}-${mm}-${dd}`;
+
+        const dateInput = document.getElementById('exp_date');
+        if (dateInput) {
+            dateInput.min = minStr;
+            dateInput.value = minStr;
+            calculateAutoPrice();
+        }
+    }
+
+    function calculateAutoPrice() {
+        const dateVal = document.getElementById('exp_date').value;
+        if (!dateVal) return;
+
+        const targetDate = new Date(dateVal + "T23:59:59");
+        const compareBase = currentServerTime > 0 ? currentServerTime : Date.now();
+        const diffMs = targetDate.getTime() - compareBase;
+
+        let days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        if (days < 1) days = 1;
+
+        const totalCost = days * 100;
+        document.getElementById('key_cost').value = totalCost;
+        document.getElementById('daysSummary').innerText = `(${days} Din = ₹${totalCost})`;
+        calculatedTimestamp = targetDate.getTime();
+    }
+
+    function makeRandomKey() {
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        let r1 = "", r2 = "";
+        for (let i = 0; i < 4; i++) r1 += chars.charAt(Math.floor(Math.random() * chars.length));
+        for (let i = 0; i < 4; i++) r2 += chars.charAt(Math.floor(Math.random() * chars.length));
+        document.getElementById('new_key').value = "VIP-" + r1 + "-" + r2;
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        const user = document.getElementById('log_user').value.trim().toLowerCase();
+        const pass = document.getElementById('log_pass').value.trim();
+
+        const body = new URLSearchParams({ username: user, password: pass });
+
+        try {
+            const res = await fetch(`${API_BASE}/reseller/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body
+            });
+            const data = await res.json();
+            if (data.success) {
+                currentUser = user;
+                localStorage.setItem('reseller_user', user);
+                showDashboard();
+            } else {
+                alert(data.msg || "Invalid User or Password!");
+            }
+        } catch (err) {
+            alert("Server connect error!");
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('reseller_user');
+        currentUser = '';
+        document.getElementById('dashView').style.display = 'none';
+        document.getElementById('bottomNavBar').style.display = 'none';
+        document.getElementById('loginView').style.display = 'block';
+    }
+
+    function showDashboard() {
+        document.getElementById('loginView').style.display = 'none';
+        document.getElementById('dashView').style.display = 'block';
+        document.getElementById('bottomNavBar').style.display = 'flex';
+        document.getElementById('dispUser').innerText = `👤 ${currentUser.toUpperCase()}`;
+        makeRandomKey();
+        loadDashboard();
+    }
+
+    async function loadDashboard() {
+        if (!currentUser) return;
+
+        try {
+            const res = await fetch(`${API_BASE}/reseller/data?username=${encodeURIComponent(currentUser)}`);
+            const data = await res.json();
+
+            if (!data.success) {
+                logout();
+                return;
+            }
+
+            if (data.server_time) {
+                currentServerTime = data.server_time;
+                const d = new Date(currentServerTime);
+                document.getElementById('dispDateTime').innerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ", " + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            // Wallet Balance
+            document.getElementById('statBalance').innerText = `₹${(data.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+
+            // Render Transactions Table (Screenshot Match)
+            renderTransactions(data.transactions || []);
+
+            // Render Keys
+            renderKeys(data.keys || [], currentServerTime);
+
+            if (data.whatsapp) document.getElementById('contact_whatsapp').value = data.whatsapp;
+            if (data.telegram) document.getElementById('contact_telegram').value = data.telegram;
+
+            initDatePicker();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // Render Transactions Table (Exact Match)
+    function renderTransactions(txs) {
+        const tbody = document.getElementById('txTableBody');
+        document.getElementById('txCountBadge').innerText = `(${txs.length})`;
+
+        if (txs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 25px;">Abhi koi transaction nahi hua hai.</td></tr>';
+            return;
+        }
+
+        let html = '';
+        txs.forEach(t => {
+            const isDebit = t.type === 'debit';
+            const badgeClass = isDebit ? 'badge-debit' : 'badge-credit';
+            const badgeText = isDebit ? '↑ Debit' : '↓ Credit';
+            const amountClass = isDebit ? 'tx-amount-debit' : 'tx-amount-credit';
+            const amountPrefix = isDebit ? '-₹' : '+₹';
+
+            html += `
+                <tr>
+                    <td class="tx-date">${t.date || '--'}</td>
+                    <td>
+                        <span class="badge-tx ${badgeClass}">${badgeText}</span>
+                    </td>
+                    <td class="${amountClass}">${amountPrefix}${parseFloat(t.amount || 0).toFixed(2)}</td>
+                    <td class="tx-details" title="${t.details || ''}">${t.details || '--'}</td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+    }
+
+    function renderKeys(keys, realServerTime) {
+        const container = document.getElementById('keysContainer');
+        if (keys.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">Koi key generate nahi hui hai.</div>';
+            return;
+        }
+
+        let html = '';
+        keys.forEach(k => {
+            const exp = k.expiry_timestamp || 0;
+            const isExp = exp > 0 && realServerTime > exp;
+            let status = k.status || 'unused';
+            if (isExp) status = 'expired';
+
+            const expStr = exp > 0 ? new Date(exp).toLocaleDateString('en-GB') : 'No Expiry';
+
+            html += `
+                <div class="key-box">
+                    <div class="key-header">
+                        <span class="key-code">${k.key}</span>
+                        <span style="font-size: 11px; font-weight: 700; color: ${isExp ? '#EF4444' : '#10B981'};">${status.toUpperCase()}</span>
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                        Plan: <b>${k.plan || 'Custom'}</b> | Exp: <b>${expStr}</b><br>
+                        HWID: ${k.hwid ? k.hwid.slice(0, 16) + '...' : 'Khali'}
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                        <button class="btn-act btn-copy" onclick="navigator.clipboard.writeText('${k.key}').then(() => alert('Copied!'))">Copy</button>
+                        <button class="btn-act btn-del" onclick="deleteKey('${k.key}')">Delete</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    async function generateKey(e) {
+        e.preventDefault();
+        const key = document.getElementById('new_key').value.trim().toUpperCase();
+
+        if (!calculatedTimestamp) calculateAutoPrice();
+
+        const body = new URLSearchParams({
+            username: currentUser,
+            key: key,
+            expiry_timestamp: calculatedTimestamp.toString()
+        });
+
+        try {
+            const res = await fetch(`${API_BASE}/reseller/generate_key`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert(`Key [${key}] generate ho gayi!\n₹${data.cost} wallet se deduct hua.`);
+                makeRandomKey();
+                initDatePicker();
+                loadDashboard();
+                switchTab('balance'); // Automatic passbook par le jayega
+            } else {
+                alert(data.msg || "Failed");
+            }
+        } catch (err) {
+            alert('Error generating key');
+        }
+    }
+
+    async function deleteKey(key) {
+        if (!confirm(`Key [${key}] ko delete karein?`)) return;
+        const body = new URLSearchParams({ username: currentUser, key: key });
+        try {
+            const res = await fetch(`${API_BASE}/reseller/delete_key`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body
+            });
+            const data = await res.json();
+            alert(data.msg || "Deleted");
+            loadDashboard();
+        } catch (err) {
+            alert("Delete fail!");
+        }
+    }
+
+    async function updateContactLinks(e) {
+        e.preventDefault();
+        const wa = document.getElementById('contact_whatsapp').value.trim();
+        const tg = document.getElementById('contact_telegram').value.trim();
+
+        const body = new URLSearchParams({ username: currentUser, whatsapp: wa, telegram: tg });
+        try {
+            const res = await fetch(`${API_BASE}/reseller/update_contact`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body
+            });
+            const data = await res.json();
+            alert(data.msg || "Updated");
+        } catch (err) {
+            alert("Error updating links!");
+        }
+    }
+
+    window.onload = function() {
+        if (currentUser) showDashboard();
+    };
+</script>
+
+</body>
+</html>
