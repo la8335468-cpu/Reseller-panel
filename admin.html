@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Control Panel</title>
+    <title>Admin Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,191 +14,138 @@
             --primary: #6366F1;
             --success: #10B981;
             --danger: #EF4444;
-            --text-main: #F8FAFC;
+            --text-main: #FFFFFF;
             --text-muted: #94A3B8;
             --border: #1E233D;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); padding: 24px 16px; min-height: 100vh; }
-        .container { max-width: 900px; margin: 0 auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .header h1 { font-size: 20px; font-weight: 800; color: var(--primary); }
-        .btn-refresh { background-color: var(--border); color: #38BDF8; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
-        .card { background-color: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; margin-bottom: 24px; }
-        .card-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; }
-        .status-pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
-        .status-online { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
-        .status-offline { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px; }
-        .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-        .input-group input { width: 100%; background-color: var(--input); border: 1px solid var(--border); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 14px; outline: none; }
-        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
-        .btn-action { flex: 1; min-width: 180px; padding: 13px; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-align: center; }
-        .btn-danger { background-color: var(--danger); color: #fff; }
-        .btn-success { background-color: var(--success); color: #fff; }
-        .btn-info { background-color: #38BDF8; color: #0B0C16; }
-        .btn-secondary { background-color: var(--border); color: #F8FAFC; }
-        .btn-submit { width: 100%; background-color: var(--success); color: #fff; border: none; padding: 14px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
-        .reseller-item { background-color: var(--card-inner); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
-        .item-top { display: flex; justify-content: space-between; align-items: center; }
-        .username { font-size: 16px; font-weight: 700; color: #60A5FA; }
-        .badge { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
-        .badge-active { background-color: rgba(16, 185, 129, 0.15); color: var(--success); }
-        .badge-expired { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); }
-        .item-details { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-        .item-details span { color: var(--text-main); font-weight: 600; }
-        .item-actions { display: flex; justify-content: flex-end; gap: 10px; }
-        .btn-recharge { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; }
-        .btn-delete { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; padding: 16px; z-index: 100; }
-        .modal-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; width: 100%; max-width: 380px; }
-        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
-        .btn-cancel { background: transparent; color: var(--text-muted); border: none; padding: 8px 14px; cursor: pointer; }
+        body { background-color: var(--bg); color: var(--text-main); padding: 22px 14px; min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; }
+        #loginView { max-width: 380px; margin: 80px auto; background-color: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header h1 { font-size: 18px; font-weight: 800; color: #60A5FA; }
+        .card { background-color: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+        .card-title { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 14px; text-transform: uppercase; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 14px; }
+        .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
+        .input-group input { width: 100%; background-color: var(--input); border: 1px solid var(--border); color: #fff; padding: 11px 13px; border-radius: 12px; font-size: 13px; outline: none; }
+        .btn-act { width: 100%; padding: 12px; border: none; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; background: var(--success); color: #fff; }
+        .reseller-item { background-color: var(--card-inner); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+        .badge-active { background: rgba(16,185,129,0.15); color: #10B981; }
+        .badge-expired { background: rgba(239,68,68,0.15); color: #EF4444; }
+        .btn-small { border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; margin-left: 6px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>MASTER CONTROL PANEL</h1>
-        <button class="btn-refresh" onclick="loadAll()">REFRESH ALL</button>
-    </div>
 
-    <!-- 1. APP REMOTE CONTROL CARD -->
-    <div class="card">
-        <div class="card-title">
-            <span>APP REMOTE KILL-SWITCH & BROADCAST ALERT</span>
-            <span id="appStatusBadge" class="status-pill status-online">CHECKING...</span>
-        </div>
-        <div class="btn-group" style="margin-bottom: 20px;">
-            <button type="button" class="btn-action btn-danger" onclick="setAppStatus('disabled')">🛑 CRASH / DEACTIVATE APP</button>
-            <button type="button" class="btn-action btn-success" onclick="setAppStatus('active')">✅ ACTIVATE APP</button>
-        </div>
-        <div style="border-top: 1px solid var(--border); padding-top: 18px;">
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Alert Title</label>
-                    <input type="text" id="alert_title" placeholder="Notice / Maintenance">
-                </div>
-                <div class="input-group">
-                    <label>Alert Message</label>
-                    <input type="text" id="alert_msg" placeholder="Server maintenance. App will resume shortly.">
-                </div>
+    <!-- 1. ADMIN LOGIN VIEW -->
+    <div id="loginView">
+        <h2 style="text-align:center; color:#60A5FA; margin-bottom:20px;">ADMIN LOGIN</h2>
+        <form onsubmit="handleLogin(event)">
+            <div class="input-group" style="margin-bottom:12px;">
+                <label>Admin ID</label>
+                <input type="text" id="log_user" placeholder="Enter admin ID" required>
             </div>
-            <div class="btn-group">
-                <button type="button" class="btn-action btn-info" onclick="sendAppAlert(true)">📢 BROADCAST ALERT</button>
-                <button type="button" class="btn-action btn-secondary" onclick="sendAppAlert(false)">❌ CLEAR ALERT</button>
+            <div class="input-group" style="margin-bottom:18px;">
+                <label>Password</label>
+                <input type="password" id="log_pass" placeholder="Enter password" required>
             </div>
-        </div>
-    </div>
-
-    <!-- 2. CREATE RESELLER CARD -->
-    <div class="card">
-        <div class="card-title">CREATE RESELLER</div>
-        <form id="createForm" onsubmit="createReseller(event)">
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Reseller User ID</label>
-                    <input type="text" id="new_user" placeholder="e.g. aman / vip_user" required>
-                </div>
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="text" id="new_pass" placeholder="password" required>
-                </div>
-                <div class="input-group">
-                    <label>Validity Days</label>
-                    <input type="number" id="new_days" value="30" required>
-                </div>
-                <div class="input-group">
-                    <label>Initial Balance (₹)</label>
-                    <input type="number" id="new_balance" value="500" required>
-                </div>
-            </div>
-            <button type="submit" class="btn-submit">CREATE RESELLER ID</button>
+            <button type="submit" class="btn-act" style="background:#6366F1;">LOGIN TO PANEL</button>
         </form>
     </div>
 
-    <!-- 3. RESELLERS LIST -->
-    <div class="card">
-        <div class="card-title">REGISTERED RESELLERS</div>
-        <div id="resellerList"><div style="text-align:center; color:var(--text-muted); padding:20px;">Loading resellers...</div></div>
-    </div>
-</div>
+    <!-- 2. ADMIN DASHBOARD VIEW -->
+    <div id="dashView" style="display: none;">
+        <div class="header">
+            <div>
+                <h1>🛡️ ADMIN CONTROL PANEL</h1>
+                <div style="font-size:12px; color:var(--text-muted);" id="dispAdminUser">Welcome, --</div>
+            </div>
+            <button onclick="logout()" style="background:#2D151B; color:#EF4444; border:none; padding:8px 14px; border-radius:12px; font-weight:700; cursor:pointer;">LOGOUT</button>
+        </div>
 
-<!-- Recharge Modal -->
-<div class="modal" id="rechargeModal">
-    <div class="modal-card">
-        <h3 style="margin-bottom:12px;">Recharge Wallet (<span id="modalUsername"></span>)</h3>
-        <div class="input-group">
-            <label>Amount (₹)</label>
-            <input type="number" id="rechargeAmount" placeholder="50, 100, 500" min="1">
+        <!-- CREATE RESELLER -->
+        <div class="card">
+            <div class="card-title">👤 CREATE RESELLER ACCOUNT</div>
+            <form onsubmit="createReseller(event)">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Reseller User ID</label>
+                        <input type="text" id="new_reseller_user" placeholder="e.g. seller_aman" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="text" id="new_reseller_pass" placeholder="password" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Validity Days</label>
+                        <input type="number" id="new_reseller_days" value="30" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Initial Balance (₹)</label>
+                        <input type="number" id="new_reseller_bal" value="500" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-act">CREATE RESELLER</button>
+            </form>
         </div>
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-            <button class="btn-recharge" onclick="submitRecharge()">Add Balance</button>
+
+        <!-- RESELLERS LIST -->
+        <div class="card">
+            <div class="card-title">📋 MY REGISTERED RESELLERS</div>
+            <div id="resellersList"><div style="text-align:center; color:var(--text-muted); padding:15px;">Loading...</div></div>
         </div>
     </div>
+
 </div>
 
 <script>
     const API_BASE = window.location.origin;
-    let activeRechargeUser = '';
+    let currentAdmin = localStorage.getItem('admin_logged_user') || '';
 
-    function loadAll() {
-        loadAppControl();
+    async function handleLogin(e) {
+        e.preventDefault();
+        const user = document.getElementById('log_user').value.trim().toLowerCase();
+        const pass = document.getElementById('log_pass').value.trim();
+
+        const body = new URLSearchParams({ username: user, password: pass });
+        try {
+            const res = await fetch(`${API_BASE}/admin/login`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+            const data = await res.json();
+            if (data.success) {
+                currentAdmin = user;
+                localStorage.setItem('admin_logged_user', user);
+                showDashboard();
+            } else {
+                alert(data.msg || "Login failed!");
+            }
+        } catch (e) { alert("Server error!"); }
+    }
+
+    function logout() {
+        localStorage.removeItem('admin_logged_user');
+        currentAdmin = '';
+        document.getElementById('dashView').style.display = 'none';
+        document.getElementById('loginView').style.display = 'block';
+    }
+
+    function showDashboard() {
+        document.getElementById('loginView').style.display = 'none';
+        document.getElementById('dashView').style.display = 'block';
+        document.getElementById('dispAdminUser').innerText = `Logged in as @${currentAdmin.toUpperCase()}`;
         loadResellers();
     }
 
-    async function loadAppControl() {
-        try {
-            const res = await fetch(`${API_BASE}/admin/get_app_control`);
-            const data = await res.json();
-            const badge = document.getElementById('appStatusBadge');
-            if (data.status === 'disabled') {
-                badge.innerText = 'APP: DISABLED (CRASH)';
-                badge.className = 'status-pill status-offline';
-            } else {
-                badge.innerText = 'APP: ACTIVE (NORMAL)';
-                badge.className = 'status-pill status-online';
-            }
-            if (data.show_alert) {
-                document.getElementById('alert_title').value = data.alert_title || '';
-                document.getElementById('alert_msg').value = data.alert_msg || '';
-            }
-        } catch (e) {}
-    }
-
-    async function setAppStatus(status) {
-        if (!confirm(status === 'disabled' ? "Crash/Disable all app users?" : "Activate app?")) return;
-        const body = new URLSearchParams({ status: status, show_alert: status === 'disabled' ? 'true' : 'false', alert_title: status === 'disabled' ? "APP STOPPED" : "", alert_msg: status === 'disabled' ? "App disabled by admin." : "" });
-        try {
-            const res = await fetch(`${API_BASE}/admin/set_app_control`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
-            const data = await res.json();
-            alert(data.msg || "Updated");
-            loadAppControl();
-        } catch (e) { alert("Error"); }
-    }
-
-    async function sendAppAlert(showAlert) {
-        const title = document.getElementById('alert_title').value.trim();
-        const msg = document.getElementById('alert_msg').value.trim();
-        if (showAlert && (!title || !msg)) { alert("Title and Message required!"); return; }
-        const body = new URLSearchParams({ status: 'active', alert_title: title, alert_msg: msg, show_alert: showAlert ? 'true' : 'false' });
-        try {
-            const res = await fetch(`${API_BASE}/admin/set_app_control`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
-            const data = await res.json();
-            alert(showAlert ? "Alert Broadcasted!" : "Alert Cleared!");
-            loadAppControl();
-        } catch (e) { alert("Error"); }
-    }
-
     async function loadResellers() {
-        const container = document.getElementById('resellerList');
+        const container = document.getElementById('resellersList');
         try {
-            const res = await fetch(`${API_BASE}/admin/get_resellers`);
+            const res = await fetch(`${API_BASE}/admin/get_resellers?admin_user=${encodeURIComponent(currentAdmin)}`);
             const data = await res.json();
             if (!data || data.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">Koi reseller nahi hai.</div>';
+                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:15px;">Aapne abhi koi reseller create nahi kiya hai.</div>';
                 return;
             }
             const now = Date.now();
@@ -206,20 +153,16 @@
             data.forEach(r => {
                 const exp = r.expiry_timestamp || 0;
                 const remDays = exp > 0 ? Math.ceil((exp - now) / (1000 * 60 * 60 * 24)) : 0;
-                const isExpired = remDays <= 0 && exp > 0;
+                const isExp = remDays <= 0 && exp > 0;
                 html += `
                     <div class="reseller-item">
-                        <div class="item-top">
-                            <span class="username">${String(r.username).toUpperCase()}</span>
-                            <span class="badge ${isExpired ? 'badge-expired' : 'badge-active'}">${isExpired ? 'EXPIRED' : remDays + ' DIN BAAKI'}</span>
+                        <div>
+                            <div style="font-size:14px; font-weight:700; color:#60A5FA;">👤 ${String(r.username).toUpperCase()} <span class="badge ${isExp ? 'badge-expired' : 'badge-active'}">${isExp ? 'EXPIRED' : remDays + ' DIN'}</span></div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">Password: <b>${r.password}</b> | Wallet: <b>₹${(r.balance||0).toFixed(2)}</b></div>
                         </div>
-                        <div class="item-details">
-                            Password: <span>${r.password || 'N/A'}</span><br>
-                            Wallet: <span>₹${(r.balance || 0).toFixed(2)}</span> | WhatsApp: <span>${r.whatsapp || 'Default'}</span>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-recharge" onclick="openRechargeModal('${r.username}')">+ RECHARGE</button>
-                            <button class="btn-delete" onclick="deleteReseller('${r.username}')">DELETE</button>
+                        <div>
+                            <button class="btn-small" style="background:#132A22; color:#10B981;" onclick="rechargeReseller('${r.username}')">+ RECHARGE</button>
+                            <button class="btn-small" style="background:#2D151B; color:#EF4444;" onclick="deleteReseller('${r.username}')">DELETE</button>
                         </div>
                     </div>
                 `;
@@ -231,56 +174,48 @@
     async function createReseller(e) {
         e.preventDefault();
         const body = new URLSearchParams({
-            username: document.getElementById('new_user').value.trim().toLowerCase(),
-            password: document.getElementById('new_pass').value.trim(),
-            days: document.getElementById('new_days').value,
-            balance: document.getElementById('new_balance').value
+            admin_user: currentAdmin,
+            username: document.getElementById('new_reseller_user').value.trim().toLowerCase(),
+            password: document.getElementById('new_reseller_pass').value.trim(),
+            days: document.getElementById('new_reseller_days').value,
+            balance: document.getElementById('new_reseller_bal').value
         });
         try {
             const res = await fetch(`${API_BASE}/admin/create_reseller`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
-            alert(data.msg || 'Created');
+            alert(data.msg || "Created!");
             if (data.success) {
-                document.getElementById('new_user').value = '';
-                document.getElementById('new_pass').value = '';
+                document.getElementById('new_reseller_user').value = '';
+                document.getElementById('new_reseller_pass').value = '';
                 loadResellers();
             }
-        } catch (e) { alert("Error"); }
+        } catch (e) { alert("Error creating reseller"); }
     }
 
-    function openRechargeModal(user) {
-        activeRechargeUser = user;
-        document.getElementById('modalUsername').innerText = String(user).toUpperCase();
-        document.getElementById('rechargeAmount').value = '';
-        document.getElementById('rechargeModal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('rechargeModal').style.display = 'none';
-    }
-
-    async function submitRecharge() {
-        const amt = document.getElementById('rechargeAmount').value;
-        if (!amt || parseFloat(amt) <= 0) return alert("Valid amount daalein!");
-        const body = new URLSearchParams({ username: activeRechargeUser, amount: amt });
+    async function rechargeReseller(user) {
+        const amt = prompt(`Reseller [${user.toUpperCase()}] ke wallet me kitna rupya add karna hai?`, "500");
+        if (!amt || parseFloat(amt) <= 0) return;
+        const body = new URLSearchParams({ admin_user: currentAdmin, username: user, amount: amt });
         try {
             const res = await fetch(`${API_BASE}/admin/recharge_reseller`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
-            if (data.success) { alert("Recharged!"); closeModal(); loadResellers(); }
-        } catch (e) { alert("Error"); }
+            if (data.success) { alert("Recharge successful!"); loadResellers(); }
+        } catch (e) { alert("Error!"); }
     }
 
     async function deleteReseller(user) {
-        if (!confirm(`Delete reseller [${user}]?`)) return;
+        if (!confirm(`Reseller [${user.toUpperCase()}] ko permanently delete karein?`)) return;
         const body = new URLSearchParams({ username: user });
         try {
             const res = await fetch(`${API_BASE}/admin/delete_reseller`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
             if (data.success) { alert("Deleted!"); loadResellers(); }
-        } catch (e) { alert("Error"); }
+        } catch (e) { alert("Error!"); }
     }
 
-    window.onload = loadAll;
+    window.onload = function() {
+        if (currentAdmin) showDashboard();
+    };
 </script>
 
 </body>
