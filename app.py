@@ -16,7 +16,7 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
-# --- FIREBASE DATABASE URL ---
+# --- FIREBASE REALTIME DATABASE URL ---
 FIREBASE_URL = "https://reseller-c0cf4-default-rtdb.firebaseio.com"
 
 # --- BUILT-IN IST TIME ---
@@ -61,26 +61,38 @@ def add_transaction(user, tx_type, amount, details):
     tx_data = {
         "timestamp": now_ts,
         "date": get_ist_datetime_str(),
-        "type": tx_type,
+        "type": tx_type,  # 'debit' ya 'credit'
         "amount": float(amount),
         "details": details
     }
     fb_put(f"resellers/{user}/transactions/{now_ts}", tx_data)
 
 
-# --- UNIFIED PORTAL ROUTE ---
+# --- WEB PAGE ROUTES ---
 @app.route('/')
 @app.route('/login')
-@app.route('/admin')
-@app.route('/seller')
-@app.route('/master')
-def serve_portal():
+def home_portal():
     if os.path.exists('index.html'):
         return send_file('index.html')
-    path = request.path.strip('/')
-    if path and os.path.exists(f"{path}.html"):
-        return send_file(f"{path}.html")
-    return "Error: index.html missing in repository", 404
+    return "index.html missing", 404
+
+@app.route('/master')
+def master_page():
+    if os.path.exists('master.html'):
+        return send_file('master.html')
+    return "master.html missing", 404
+
+@app.route('/admin')
+def admin_page():
+    if os.path.exists('admin.html'):
+        return send_file('admin.html')
+    return "admin.html missing", 404
+
+@app.route('/seller')
+def seller_page():
+    if os.path.exists('seller.html'):
+        return send_file('seller.html')
+    return "seller.html missing", 404
 
 
 # =======================================================
@@ -103,7 +115,7 @@ def master_set_app_control():
     }
 
     if fb_patch("panel_config/app_control", control_data):
-        return jsonify({"success": True, "msg": "App control status successfully update ho gaya!"})
+        return jsonify({"success": True, "msg": "App control status update ho gaya!"})
     return jsonify({"success": False, "msg": "Firebase update fail!"}), 500
 
 @app.route('/master/get_app_control', methods=['GET'])
@@ -258,7 +270,7 @@ def admin_delete_reseller():
 
 
 # =======================================================
-# 3. LEVEL 3: RESELLER PANEL
+# 3. LEVEL 3: RESELLER PANEL (KEYS & TRANSACTIONS)
 # =======================================================
 
 @app.route('/reseller/login', methods=['POST'])
@@ -341,7 +353,7 @@ def update_contact():
     fb_patch(f"resellers/{user}", update_payload)
     return jsonify({"success": True, "msg": "WhatsApp aur Telegram links update ho gaye!"})
 
-# KEY GENERATION (1 DIN = 100 RS + 10 MIN TRIAL SUPPORT)
+# KEY GENERATION (1 DIN = 100 RS + 10 MIN TRIAL)
 @app.route('/reseller/generate_key', methods=['POST'])
 def reseller_generate_key():
     user = request.form.get('username', '').strip().lower()
@@ -351,19 +363,21 @@ def reseller_generate_key():
 
     now = int(time.time() * 1000)
 
+    # 1. 10 Min Trial
     if plan == 'trial':
         exp = now + (10 * 60 * 1000)
         cost = 0.0
         plan_name = "10 Min Trial"
         days_desc = "10 Min Trial"
     else:
+        # 2. Standard Expiry (1 Din = ₹100)
         try:
             exp = int(custom_exp)
         except Exception:
             exp = now + (24 * 3600 * 1000)
 
         if exp <= now:
-            return jsonify({"success": False, "msg": "Expiry date aane wale samay ki select karein!"}), 400
+            return jsonify({"success": False, "msg": "Expiry date future ki select karein!"}), 400
 
         diff_ms = exp - now
         days = max(1, math.ceil(diff_ms / (24 * 3600 * 1000.0)))
