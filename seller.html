@@ -40,26 +40,6 @@
             margin: 0 auto;
         }
 
-        /* 1. LOGIN SCREEN */
-        #loginView {
-            max-width: 380px;
-            margin: 80px auto;
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .login-title {
-            font-size: 20px;
-            font-weight: 800;
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 22px;
-        }
-
-        /* Top Header */
         .panel-header {
             display: flex;
             justify-content: space-between;
@@ -92,7 +72,6 @@
             cursor: pointer;
         }
 
-        /* Balance Card */
         .balance-card {
             background: linear-gradient(135deg, #181C38, #14172E);
             border: 1px solid var(--border);
@@ -122,7 +101,6 @@
             color: #7983A8;
         }
 
-        /* Card Container */
         .card {
             background-color: var(--card);
             border: 1px solid var(--border);
@@ -141,7 +119,6 @@
             margin-bottom: 14px;
         }
 
-        /* Forms */
         .input-group {
             margin-bottom: 12px;
         }
@@ -176,7 +153,7 @@
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.15s;
         }
 
         .btn-trial {
@@ -189,7 +166,6 @@
             gap: 6px;
         }
 
-        /* Transactions Table */
         .tx-table-container {
             overflow-x: auto;
         }
@@ -245,7 +221,6 @@
         .tx-amount-credit { color: #34D399; font-weight: 700; white-space: nowrap; }
         .tx-details { color: #8E96B5; font-family: monospace; font-size: 11px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* Keys Item Box */
         .key-box {
             background-color: var(--card-inner);
             border: 1px solid var(--border);
@@ -302,7 +277,6 @@
         .btn-edit { background: rgba(56, 189, 248, 0.2); color: #38BDF8; }
         .btn-del { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
 
-        /* Profile Details Grid */
         .profile-row {
             display: flex;
             justify-content: space-between;
@@ -324,7 +298,6 @@
             color: #FFFFFF;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -358,7 +331,6 @@
             margin-top: 14px;
         }
 
-        /* Bottom Navigation Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -400,160 +372,126 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="dashView">
 
-    <!-- 1. RESELLER LOGIN -->
-    <div id="loginView">
-        <h2 class="login-title">RESELLER LOGIN</h2>
-        <form onsubmit="handleLogin(event)">
-            <div class="input-group">
-                <label>User ID</label>
-                <input type="text" id="log_user" placeholder="Enter reseller ID" required>
-            </div>
-            <div class="input-group" style="margin-bottom: 18px;">
-                <label>Password</label>
-                <input type="password" id="log_pass" placeholder="Enter password" required>
-            </div>
-            <button type="submit" class="btn-submit">LOGIN TO DASHBOARD</button>
-        </form>
+    <div class="panel-header">
+        <div>
+            <div class="panel-title">🏪 Seller Panel</div>
+            <div style="font-size: 11px; color: #6C7598; margin-top: 2px;" id="dispDateTime">--</div>
+        </div>
+        <div class="user-logout-row">
+            <span id="dispUser">👤 User</span>
+            <button class="btn-logout" onclick="doLogout()">↪ Logout</button>
+        </div>
     </div>
 
-    <!-- 2. RESELLER DASHBOARD (3 FOLDERS / TABS) -->
-    <div id="dashView" style="display: none;">
+    <!-- FOLDER 1: 💳 WALLET[span_7](start_span)[span_7](end_span) -->
+    <div id="tabWalletView">
+        <div class="balance-card">
+            <div class="balance-label">💳 AAPKA BALANCE</div>
+            <div class="balance-amount" id="statBalance">₹0.00</div>
+            <div class="balance-subtext">Key generate karne par price balance se cut hoga</div>
+        </div>
 
-        <div class="panel-header">
-            <div>
-                <div class="panel-title">🏪 Seller Panel</div>
-                <div style="font-size: 11px; color: #6C7598; margin-top: 2px;" id="dispDateTime">--</div>
+        <div class="card">
+            <div class="card-header-title">
+                <span>⇄ Transactions</span>
+                <span id="txCountBadge" style="color: #6C7598; font-size: 12px;">(0)</span>
             </div>
-            <div class="user-logout-row">
-                <span id="dispUser">👤 User</span>
-                <button class="btn-logout" onclick="logout()">↪ Logout</button>
+            <div class="tx-table-container">
+                <table class="tx-table">
+                    <thead>
+                        <tr>
+                            <th>DATE</th>
+                            <th>TYPE</th>
+                            <th>AMOUNT</th>
+                            <th>DETAILS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="txTableBody">
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:25px;">Loading transactions...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOLDER 2: 🔑 KEYS[span_8](start_span)[span_8](end_span) -->
+    <div id="tabKeysView" style="display: none;">
+        <button type="button" class="btn-submit btn-trial" onclick="generateTrialKey()">
+            ⚡ GENERATE 10 MINUTES TRIAL KEY (FREE ₹0)
+        </button>
+
+        <div class="card">
+            <div class="card-header-title">
+                <span>🔑 Generate Regular VIP Key</span>
+                <span style="font-size: 12px; color: #60A5FA; cursor: pointer;" onclick="makeRandomKey()">⚡ Random Key</span>
+            </div>
+            <form onsubmit="generateKey(event)">
+                <div class="input-group">
+                    <label>License Key</label>
+                    <input type="text" id="new_key" placeholder="VIP-XXXX-XXXX" required>
+                </div>
+                <div class="input-group">
+                    <label>Select Expiry Date <span id="daysSummary" style="color: #60A5FA;">(1 Din)</span></label>
+                    <input type="date" id="exp_date" required onchange="calculateAutoPrice()">
+                </div>
+                <div class="input-group">
+                    <label>Auto Price (₹100/Din - Locked)</label>
+                    <input type="number" id="key_cost" value="100" readonly style="background-color: #121526; color: #34D399; font-weight: 800; cursor: not-allowed;">
+                </div>
+                <button type="submit" class="btn-submit">CREATE LICENSE KEY</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header-title">
+                <span>My Generated Keys</span>
+                <button class="btn-act btn-copy" onclick="loadDashboard()">REFRESH</button>
+            </div>
+            <div id="keysContainer"><div style="text-align:center; color:var(--text-muted); padding:20px;">Loading keys...</div></div>
+        </div>
+    </div>
+
+    <!-- FOLDER 3: 👤 PROFILE[span_9](start_span)[span_9](end_span) -->
+    <div id="tabProfileView" style="display: none;">
+        <div class="card">
+            <div class="card-header-title">👤 Reseller Profile</div>
+            <div class="profile-row">
+                <span class="profile-title">Username:</span>
+                <span class="profile-value" id="profUsername">--</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-title">Account Status:</span>
+                <span class="profile-value" style="color: #10B981;" id="profStatus">ACTIVE</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-title">Account Validity:</span>
+                <span class="profile-value" id="profExpiry">--</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-title">Total Keys Generated:</span>
+                <span class="profile-value" style="color: #60A5FA;" id="profTotalKeys">0</span>
             </div>
         </div>
 
-        <!-- ============================================== -->
-        <!-- FOLDER 1: 💳 WALLET & TRANSACTIONS PASSBOOK -->
-        <!-- ============================================== -->
-        <div id="tabWalletView">
-            <!-- AAPKA BALANCE CARD -->
-            <div class="balance-card">
-                <div class="balance-label">💳 AAPKA BALANCE</div>
-                <div class="balance-amount" id="statBalance">₹0.00</div>
-                <div class="balance-subtext">Key generate karne par price balance se cut hoga</div>
+        <div class="card">
+            <div class="card-header-title">📱 App Dialog Contact Links</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">
+                Customer ke login popup par dikhne wale direct chat links:
             </div>
-
-            <!-- TRANSACTIONS HISTORY TABLE -->
-            <div class="card">
-                <div class="card-header-title">
-                    <span>⇄ Transactions</span>
-                    <span id="txCountBadge" style="color: #6C7598; font-size: 12px;">(0)</span>
+            <form onsubmit="updateContactLinks(event)">
+                <div class="input-group">
+                    <label>WhatsApp Link / Number</label>
+                    <input type="text" id="contact_whatsapp" placeholder="https://wa.me/919999999999" required>
                 </div>
-                <div class="tx-table-container">
-                    <table class="tx-table">
-                        <thead>
-                            <tr>
-                                <th>DATE</th>
-                                <th>TYPE</th>
-                                <th>AMOUNT</th>
-                                <th>DETAILS</th>
-                            </tr>
-                        </thead>
-                        <tbody id="txTableBody">
-                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:25px;">Loading transactions...</td></tr>
-                        </tbody>
-                    </table>
+                <div class="input-group">
+                    <label>Telegram Link / Username</label>
+                    <input type="text" id="contact_telegram" placeholder="https://t.me/your_username" required>
                 </div>
-            </div>
+                <button type="submit" class="btn-submit">SAVE CONTACT LINKS</button>
+            </form>
         </div>
-
-        <!-- ============================================== -->
-        <!-- FOLDER 2: 🔑 KEYS GENERATE & MANAGE -->
-        <!-- ============================================== -->
-        <div id="tabKeysView" style="display: none;">
-            <!-- 10 MIN FREE TRIAL BUTTON -->
-            <button type="button" class="btn-submit btn-trial" onclick="generateTrialKey()">
-                ⚡ GENERATE 10 MINUTES TRIAL KEY (FREE ₹0)
-            </button>
-
-            <!-- REGULAR KEY GENERATOR -->
-            <div class="card">
-                <div class="card-header-title">
-                    <span>🔑 Generate Regular VIP Key</span>
-                    <span style="font-size: 12px; color: #60A5FA; cursor: pointer;" onclick="makeRandomKey()">⚡ Random Key</span>
-                </div>
-                <form onsubmit="generateKey(event)">
-                    <div class="input-group">
-                        <label>License Key</label>
-                        <input type="text" id="new_key" placeholder="VIP-XXXX-XXXX" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Select Expiry Date <span id="daysSummary" style="color: #60A5FA;">(1 Din)</span></label>
-                        <input type="date" id="exp_date" required onchange="calculateAutoPrice()">
-                    </div>
-                    <div class="input-group">
-                        <label>Auto Price (₹100/Din - Locked)</label>
-                        <input type="number" id="key_cost" value="100" readonly style="background-color: #121526; color: #34D399; font-weight: 800; cursor: not-allowed;">
-                    </div>
-                    <button type="submit" class="btn-submit">CREATE LICENSE KEY</button>
-                </form>
-            </div>
-
-            <!-- KEYS LIST -->
-            <div class="card">
-                <div class="card-header-title">
-                    <span>My Generated Keys</span>
-                    <button class="btn-act btn-copy" onclick="loadDashboard()">REFRESH</button>
-                </div>
-                <div id="keysContainer"><div style="text-align:center; color:var(--text-muted); padding:20px;">Loading keys...</div></div>
-            </div>
-        </div>
-
-        <!-- ============================================== -->
-        <!-- FOLDER 3: 👤 PROFILE & CONTACT SETTINGS -->
-        <!-- ============================================== -->
-        <div id="tabProfileView" style="display: none;">
-            <!-- ACCOUNT DETAILS CARD -->
-            <div class="card">
-                <div class="card-header-title">👤 Reseller Profile</div>
-                <div class="profile-row">
-                    <span class="profile-title">Username:</span>
-                    <span class="profile-value" id="profUsername">--</span>
-                </div>
-                <div class="profile-row">
-                    <span class="profile-title">Account Status:</span>
-                    <span class="profile-value" style="color: #10B981;" id="profStatus">ACTIVE</span>
-                </div>
-                <div class="profile-row">
-                    <span class="profile-title">Account Validity:</span>
-                    <span class="profile-value" id="profExpiry">--</span>
-                </div>
-                <div class="profile-row">
-                    <span class="profile-title">Total Keys Generated:</span>
-                    <span class="profile-value" style="color: #60A5FA;" id="profTotalKeys">0</span>
-                </div>
-            </div>
-
-            <!-- DIALOG CONTACT LINKS CARD -->
-            <div class="card">
-                <div class="card-header-title">📱 App Dialog Contact Links</div>
-                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">
-                    Jab customer galat/expired key enter karega, toh yahi WhatsApp aur Telegram button khulega:
-                </div>
-                <form onsubmit="updateContactLinks(event)">
-                    <div class="input-group">
-                        <label>WhatsApp Link / Number</label>
-                        <input type="text" id="contact_whatsapp" placeholder="https://wa.me/919999999999" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Telegram Link / Username</label>
-                        <input type="text" id="contact_telegram" placeholder="https://t.me/your_username" required>
-                    </div>
-                    <button type="submit" class="btn-submit">SAVE CONTACT LINKS</button>
-                </form>
-            </div>
-        </div>
-
     </div>
 
 </div>
@@ -583,8 +521,8 @@
     </div>
 </div>
 
-<!-- 3 BOTTOM NAVIGATION FOLDERS (WALLET, KEYS, PROFILE) -->
-<div class="bottom-nav" id="bottomNavBar" style="display: none;">
+<!-- 3 BOTTOM NAVIGATION FOLDERS[span_10](start_span)[span_10](end_span) -->
+<div class="bottom-nav" id="bottomNavBar">
     <div class="nav-item active" id="navItemWallet" onclick="switchFolder('wallet')">
         <div class="nav-btn-pill"><span>💳</span><span>Wallet</span></div>
     </div>
@@ -603,7 +541,22 @@
     let calculatedTimestamp = 0;
     let editingKey = '';
 
-    // 3 FOLDERS SWITCHER (WALLET, KEYS, PROFILE)
+    // Direct Portal Redirect on Logout
+    function doLogout() {
+        localStorage.removeItem('reseller_user');
+        window.location.replace('/'); // Instant redirect to License Manager Portal[span_11](start_span)[span_11](end_span)
+    }
+
+    // Auth Guard
+    if (!currentUser) {
+        window.location.replace('/');
+    } else {
+        document.getElementById('dispUser').innerText = `👤 ${currentUser.toUpperCase()}`;
+        document.getElementById('profUsername').innerText = `@${currentUser.toUpperCase()}`;
+        makeRandomKey();
+        loadDashboard();
+    }
+
     function switchFolder(folder) {
         document.getElementById('tabWalletView').style.display = folder === 'wallet' ? 'block' : 'none';
         document.getElementById('tabKeysView').style.display = folder === 'keys' ? 'block' : 'none';
@@ -655,46 +608,11 @@
         document.getElementById('new_key').value = "VIP-" + r1 + "-" + r2;
     }
 
-    async function handleLogin(e) {
-        e.preventDefault();
-        const user = document.getElementById('log_user').value.trim().toLowerCase();
-        const pass = document.getElementById('log_pass').value.trim();
-        const body = new URLSearchParams({ username: user, password: pass });
-        try {
-            const res = await fetch(`${API_BASE}/reseller/login`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
-            const data = await res.json();
-            if (data.success) {
-                currentUser = user;
-                localStorage.setItem('reseller_user', user);
-                showDashboard();
-            } else { alert(data.msg || "Invalid User or Password!"); }
-        } catch (err) { alert("Server connect error!"); }
-    }
-
-    function logout() {
-        localStorage.removeItem('reseller_user');
-        currentUser = '';
-        document.getElementById('dashView').style.display = 'none';
-        document.getElementById('bottomNavBar').style.display = 'none';
-        document.getElementById('loginView').style.display = 'block';
-    }
-
-    function showDashboard() {
-        document.getElementById('loginView').style.display = 'none';
-        document.getElementById('dashView').style.display = 'block';
-        document.getElementById('bottomNavBar').style.display = 'flex';
-        document.getElementById('dispUser').innerText = `👤 ${currentUser.toUpperCase()}`;
-        document.getElementById('profUsername').innerText = `@${currentUser.toUpperCase()}`;
-        makeRandomKey();
-        loadDashboard();
-    }
-
     async function loadDashboard() {
-        if (!currentUser) return;
         try {
             const res = await fetch(`${API_BASE}/reseller/data?username=${encodeURIComponent(currentUser)}`);
             const data = await res.json();
-            if (!data.success) { logout(); return; }
+            if (!data.success) { doLogout(); return; }
 
             if (data.server_time) {
                 currentServerTime = data.server_time;
@@ -702,10 +620,8 @@
                 document.getElementById('dispDateTime').innerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ", " + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             }
 
-            // Wallet Balance
             document.getElementById('statBalance').innerText = `₹${(data.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
 
-            // Profile Info
             const exp = data.expiry_timestamp || 0;
             if (exp > 0) {
                 const remDays = Math.ceil((exp - (currentServerTime || Date.now())) / (1000 * 60 * 60 * 24));
@@ -715,10 +631,7 @@
             }
             document.getElementById('profTotalKeys').innerText = (data.keys || []).length;
 
-            // Render Transactions Table (Passbook)
             renderTransactions(data.transactions || []);
-
-            // Render Keys List
             renderKeys(data.keys || [], currentServerTime);
 
             if (data.whatsapp) document.getElementById('contact_whatsapp').value = data.whatsapp;
@@ -727,7 +640,6 @@
         } catch (err) {}
     }
 
-    // Transactions History Table
     function renderTransactions(txs) {
         const tbody = document.getElementById('txTableBody');
         document.getElementById('txCountBadge').innerText = `(${txs.length})`;
@@ -750,7 +662,6 @@
         tbody.innerHTML = html;
     }
 
-    // Keys List View
     function renderKeys(keys, realServerTime) {
         const container = document.getElementById('keysContainer');
         if (keys.length === 0) {
@@ -805,7 +716,6 @@
         navigator.clipboard.writeText(key).then(() => alert(`Key Copied: ${key}`));
     }
 
-    // 10 MIN TRIAL
     async function generateTrialKey() {
         if (!confirm("10 Minutes Free Trial Key banani hai?")) return;
         const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -827,7 +737,6 @@
         } catch (err) { alert("Error generating trial key"); }
     }
 
-    // REGULAR KEY GENERATION
     async function generateKey(e) {
         e.preventDefault();
         const key = document.getElementById('new_key').value.trim().toUpperCase();
@@ -841,7 +750,7 @@
                 makeRandomKey();
                 initDatePicker();
                 loadDashboard();
-                switchFolder('wallet'); // Key bante hi seedha passbook statement dikhayega
+                switchFolder('wallet');
             } else { alert(data.msg || "Failed"); }
         } catch (err) { alert("Error generating key"); }
     }
@@ -905,10 +814,6 @@
             alert(data.msg || "Updated");
         } catch (err) { alert("Error"); }
     }
-
-    window.onload = function() {
-        if (currentUser) showDashboard();
-    };
 </script>
 
 </body>
