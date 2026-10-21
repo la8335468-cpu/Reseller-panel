@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Admin Control</title>
+    <title>Master Control Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -40,7 +40,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -71,7 +70,6 @@
             opacity: 0.85;
         }
 
-        /* Card Container */
         .card {
             background-color: var(--card);
             border: 1px solid var(--border);
@@ -91,7 +89,6 @@
             align-items: center;
         }
 
-        /* Status Badge */
         .status-pill {
             font-size: 11px;
             font-weight: 700;
@@ -112,7 +109,6 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
-        /* Forms & Inputs */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -143,7 +139,6 @@
             border-color: var(--primary);
         }
 
-        /* Button Group */
         .btn-group {
             display: flex;
             gap: 12px;
@@ -207,7 +202,6 @@
             opacity: 0.9;
         }
 
-        /* Reseller Items */
         .reseller-item {
             background-color: var(--card-inner);
             border: 1px solid var(--border);
@@ -295,7 +289,6 @@
             padding: 20px 0;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -354,7 +347,6 @@
             <span id="appStatusBadge" class="status-pill status-online">CHECKING...</span>
         </div>
 
-        <!-- Crash / Activate Controls -->
         <div class="btn-group" style="margin-bottom: 20px;">
             <button type="button" class="btn-action btn-danger" onclick="setAppStatus('disabled')">
                 🛑 CRASH / DEACTIVATE APP
@@ -440,11 +432,7 @@
 </div>
 
 <script>
-    // Agar server par chal raha hai toh auto-origin lega, warna direct API call karega
-    const API_BASE = window.location.origin.includes('onrender.com') 
-        ? window.location.origin 
-        : "https://vip-auth-api-1.onrender.com";
-
+    const API_BASE = window.location.origin;
     let activeRechargeUser = '';
 
     function loadAll() {
@@ -452,7 +440,6 @@
         loadResellers();
     }
 
-    // --- 1. APP REMOTE CONTROL LOGIC ---
     async function loadAppControl() {
         try {
             const res = await fetch(`${API_BASE}/admin/get_app_control`);
@@ -538,7 +525,6 @@
         }
     }
 
-    // --- 2. RESELLERS MANAGEMENT LOGIC ---
     async function loadResellers() {
         const container = document.getElementById('resellerList');
         try {
