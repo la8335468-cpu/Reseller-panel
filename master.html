@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #090B14;
+            --card: #13172E;
+            --card-inner: #0D1022;
+            --input: #0A0C1A;
+            --primary: #6366F1;
+            --success: #10B981;
+            --danger: #EF4444;
+            --text-main: #FFFFFF;
+            --text-muted: #8E96B5;
+            --border: #222849;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); padding: 22px 14px; min-height: 100vh; }
+        .container { max-width: 850px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header h1 { font-size: 20px; font-weight: 800; color: #60A5FA; }
+        .btn-refresh { background-color: #252B4D; color: #38BDF8; border: none; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .card { background-color: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 20px; }
+        .card-title { font-size: 13px; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 14px; }
+        .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
+        .input-group input { width: 100%; background-color: var(--input); border: 1px solid var(--border); color: #fff; padding: 11px 13px; border-radius: 12px; font-size: 13px; outline: none; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-act { flex: 1; min-width: 160px; padding: 12px; border: none; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; text-align: center; }
+        .btn-danger { background-color: var(--danger); color: #fff; }
+        .btn-success { background-color: var(--success); color: #fff; }
+        .btn-info { background-color: #38BDF8; color: #090B14; }
+        .btn-secondary { background-color: #252B4D; color: #fff; }
+        .admin-item { background-color: var(--card-inner); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .admin-name { font-size: 15px; font-weight: 700; color: #60A5FA; }
+        .admin-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+        .badge-active { background: rgba(16,185,129,0.15); color: #10B981; }
+        .badge-expired { background: rgba(239,68,68,0.15); color: #EF4444; }
+        .btn-del { border: none; padding: 7px 14px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; background: #2D151B; color: #EF4444; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>👑 MASTER CONTROL (OWNER)</h1>
+        <button class="btn-refresh" onclick="loadAll()">REFRESH</button>
+    </div>
+
+    <!-- 1. APP REMOTE CRASH & LIVE ALERT (REMOTE CONTROL) -->
+    <div class="card">
+        <div class="card-title">
+            <span>🛡️ APP REMOTE KILL-SWITCH & LIVE ALERT</span>
+            <span id="appStatusBadge" style="color: #10B981;">CHECKING...</span>
+        </div>
+        <div class="btn-group" style="margin-bottom: 16px;">
+            <button type="button" class="btn-act btn-danger" onclick="setAppStatus('disabled')">🛑 CRASH / DEACTIVATE APP</button>
+            <button type="button" class="btn-act btn-success" onclick="setAppStatus('active')">✅ ACTIVATE APP</button>
+        </div>
+        <div style="border-top: 1px solid var(--border); padding-top: 14px;">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Alert Popup Title</label>
+                    <input type="text" id="alert_title" placeholder="Notice / Maintenance">
+                </div>
+                <div class="input-group">
+                    <label>Alert Message</label>
+                    <input type="text" id="alert_msg" placeholder="App maintenance in progress.">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-act btn-info" onclick="sendAppAlert(true)">📢 BROADCAST ALERT</button>
+                <button type="button" class="btn-act btn-secondary" onclick="sendAppAlert(false)">❌ CLEAR ALERT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. CREATE ADMIN ACCOUNT (NO MONEY / NO BALANCE) -->
+    <div class="card">
+        <div class="card-title">👤 CREATE ADMIN (SUB-ADMIN) ACCOUNT</div>
+        <form onsubmit="createAdmin(event)">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Admin User ID</label>
+                    <input type="text" id="new_admin_user" placeholder="e.g. subadmin1" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="text" id="new_admin_pass" placeholder="Enter password" required>
+                </div>
+                <div class="input-group">
+                    <label>Validity Days</label>
+                    <input type="number" id="new_admin_days" value="30" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-act btn-success" style="width: 100%;">CREATE ADMIN ID</button>
+        </form>
+    </div>
+
+    <!-- 3. ADMINS LIST (NO MONEY / ONLY DELETE & STATUS) -->
+    <div class="card">
+        <div class="card-title">📋 REGISTERED ADMINS</div>
+        <div id="adminsList"><div style="text-align: center; color: var(--text-muted); padding: 15px;">Loading admins...</div></div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = window.location.origin;
+
+    function loadAll() {
+        loadAppControl();
+        loadAdmins();
+    }
+
+    async function loadAppControl() {
+        try {
+            const res = await fetch(`${API_BASE}/master/get_app_control`);
+            const data = await res.json();
+            const badge = document.getElementById('appStatusBadge');
+            if (data.status === 'disabled') {
+                badge.innerText = 'STATUS: DISABLED (CRASHED)';
+                badge.style.color = '#EF4444';
+            } else {
+                badge.innerText = 'STATUS: ACTIVE (NORMAL)';
+                badge.style.color = '#10B981';
+            }
+            if (data.show_alert) {
+                document.getElementById('alert_title').value = data.alert_title || '';
+                document.getElementById('alert_msg').value = data.alert_msg || '';
+            }
+        } catch (e) {}
+    }
+
+    async function setAppStatus(status) {
+        if (!confirm(status === 'disabled' ? "Sabhi users ke phone me APP CRASH/BAND karein?" : "App ko wapas ACTIVATE karein?")) return;
+        const body = new URLSearchParams({
+            status: status,
+            show_alert: status === 'disabled' ? 'true' : 'false',
+            alert_title: status === 'disabled' ? "APP STOPPED" : "",
+            alert_msg: status === 'disabled' ? "App is temporarily disabled by Master Admin." : ""
+        });
+        try {
+            const res = await fetch(`${API_BASE}/master/set_app_control`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+            const data = await res.json();
+            alert(data.msg || "Updated");
+            loadAppControl();
+        } catch (e) { alert("Error!"); }
+    }
+
+    async function sendAppAlert(showAlert) {
+        const title = document.getElementById('alert_title').value.trim();
+        const msg = document.getElementById('alert_msg').value.trim();
+        if (showAlert && (!title || !msg)) return alert("Title aur Message dono bharein!");
+        const body = new URLSearchParams({ status: 'active', alert_title: title, alert_msg: msg, show_alert: showAlert ? 'true' : 'false' });
+        try {
+            const res = await fetch(`${API_BASE}/master/set_app_control`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+            const data = await res.json();
+            alert(showAlert ? "Alert Broadcasted!" : "Alert Cleared!");
+            loadAppControl();
+        } catch (e) { alert("Error!"); }
+    }
+
+    async function loadAdmins() {
+        const container = document.getElementById('adminsList');
+        try {
+            const res = await fetch(`${API_BASE}/master/get_admins`);
+            const data = await res.json();
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 15px;">Koi admin create nahi hai.</div>';
+                return;
+            }
+            const now = Date.now();
+            let html = '';
+            data.forEach(a => {
+                const exp = a.expiry_timestamp || 0;
+                const remDays = exp > 0 ? Math.ceil((exp - now) / (1000 * 60 * 60 * 24)) : 0;
+                const isExp = remDays <= 0 && exp > 0;
+                html += `
+                    <div class="admin-item">
+                        <div>
+                            <div class="admin-name">👑 ${String(a.username).toUpperCase()} <span class="badge ${isExp ? 'badge-expired' : 'badge-active'}">${isExp ? 'EXPIRED' : remDays + ' DIN BAAKI'}</span></div>
+                            <div class="admin-sub">Password: <b>${a.password}</b></div>
+                        </div>
+                        <div>
+                            <button class="btn-del" onclick="deleteAdmin('${a.username}')">DELETE ID</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } catch (e) { container.innerHTML = '<div style="color:red; text-align:center;">Load fail</div>'; }
+    }
+
+    async function createAdmin(e) {
+        e.preventDefault();
+        const body = new URLSearchParams({
+            username: document.getElementById('new_admin_user').value.trim().toLowerCase(),
+            password: document.getElementById('new_admin_pass').value.trim(),
+            days: document.getElementById('new_admin_days').value
+        });
+        try {
+            const res = await fetch(`${API_BASE}/master/create_admin`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+            const data = await res.json();
+            alert(data.msg || "Created!");
+            if (data.success) {
+                document.getElementById('new_admin_user').value = '';
+                document.getElementById('new_admin_pass').value = '';
+                loadAdmins();
+            }
+        } catch (e) { alert("Error creating admin"); }
+    }
+
+    async function deleteAdmin(user) {
+        if (!confirm(`Admin [${user.toUpperCase()}] ko permanently delete karein?`)) return;
+        const body = new URLSearchParams({ username: user });
+        try {
+            const res = await fetch(`${API_BASE}/master/delete_admin`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+            const data = await res.json();
+            if (data.success) { alert("Deleted!"); loadAdmins(); }
+        } catch (e) { alert("Error!"); }
+    }
+
+    window.onload = loadAll;
+</script>
+
+</body>
+</html>
