@@ -18,7 +18,7 @@ def after_request(response):
 
 FIREBASE_URL = "https://reseller-c0cf4-default-rtdb.firebaseio.com"
 
-# --- BUILT-IN IST DATETIME ---
+# --- BUILT-IN IST DATETIME (NO PYTZ NEEDED) ---
 def get_ist_datetime_str():
     try:
         ist_zone = timezone(timedelta(hours=5, minutes=30))
