@@ -21,7 +21,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg); color: var(--text-main); padding: 22px 14px; min-height: 100vh; }
         .container { max-width: 800px; margin: 0 auto; }
-        #loginView { max-width: 380px; margin: 80px auto; background-color: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px 20px; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .header h1 { font-size: 18px; font-weight: 800; color: #60A5FA; }
         .card { background-color: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
@@ -39,102 +38,62 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="dashView">
+    <div class="header">
+        <div>
+            <h1>🛡️ ADMIN CONTROL PANEL</h1>
+            <div style="font-size:12px; color:var(--text-muted);" id="dispAdminUser">Welcome, --</div>
+        </div>
+        <button onclick="doLogout()" style="background:#2D151B; color:#EF4444; border:none; padding:8px 14px; border-radius:12px; font-weight:700; cursor:pointer;">↪ LOGOUT</button>
+    </div>
 
-    <!-- 1. ADMIN LOGIN VIEW -->
-    <div id="loginView">
-        <h2 style="text-align:center; color:#60A5FA; margin-bottom:20px;">ADMIN LOGIN</h2>
-        <form onsubmit="handleLogin(event)">
-            <div class="input-group" style="margin-bottom:12px;">
-                <label>Admin ID</label>
-                <input type="text" id="log_user" placeholder="Enter admin ID" required>
+    <!-- CREATE RESELLER -->
+    <div class="card">
+        <div class="card-title">👤 CREATE RESELLER ACCOUNT</div>
+        <form onsubmit="createReseller(event)">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Reseller User ID</label>
+                    <input type="text" id="new_reseller_user" placeholder="e.g. seller_aman" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="text" id="new_reseller_pass" placeholder="password" required>
+                </div>
+                <div class="input-group">
+                    <label>Validity Days</label>
+                    <input type="number" id="new_reseller_days" value="30" required>
+                </div>
+                <div class="input-group">
+                    <label>Initial Balance (₹)</label>
+                    <input type="number" id="new_reseller_bal" value="500" required>
+                </div>
             </div>
-            <div class="input-group" style="margin-bottom:18px;">
-                <label>Password</label>
-                <input type="password" id="log_pass" placeholder="Enter password" required>
-            </div>
-            <button type="submit" class="btn-act" style="background:#6366F1;">LOGIN TO PANEL</button>
+            <button type="submit" class="btn-act">CREATE RESELLER</button>
         </form>
     </div>
 
-    <!-- 2. ADMIN DASHBOARD VIEW -->
-    <div id="dashView" style="display: none;">
-        <div class="header">
-            <div>
-                <h1>🛡️ ADMIN CONTROL PANEL</h1>
-                <div style="font-size:12px; color:var(--text-muted);" id="dispAdminUser">Welcome, --</div>
-            </div>
-            <button onclick="logout()" style="background:#2D151B; color:#EF4444; border:none; padding:8px 14px; border-radius:12px; font-weight:700; cursor:pointer;">LOGOUT</button>
-        </div>
-
-        <!-- CREATE RESELLER -->
-        <div class="card">
-            <div class="card-title">👤 CREATE RESELLER ACCOUNT</div>
-            <form onsubmit="createReseller(event)">
-                <div class="form-grid">
-                    <div class="input-group">
-                        <label>Reseller User ID</label>
-                        <input type="text" id="new_reseller_user" placeholder="e.g. seller_aman" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Password</label>
-                        <input type="text" id="new_reseller_pass" placeholder="password" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Validity Days</label>
-                        <input type="number" id="new_reseller_days" value="30" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Initial Balance (₹)</label>
-                        <input type="number" id="new_reseller_bal" value="500" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn-act">CREATE RESELLER</button>
-            </form>
-        </div>
-
-        <!-- RESELLERS LIST -->
-        <div class="card">
-            <div class="card-title">📋 MY REGISTERED RESELLERS</div>
-            <div id="resellersList"><div style="text-align:center; color:var(--text-muted); padding:15px;">Loading...</div></div>
-        </div>
+    <!-- RESELLERS LIST -->
+    <div class="card">
+        <div class="card-title">📋 MY REGISTERED RESELLERS</div>
+        <div id="resellersList"><div style="text-align:center; color:var(--text-muted); padding:15px;">Loading...</div></div>
     </div>
-
 </div>
 
 <script>
     const API_BASE = window.location.origin;
     let currentAdmin = localStorage.getItem('admin_logged_user') || '';
 
-    async function handleLogin(e) {
-        e.preventDefault();
-        const user = document.getElementById('log_user').value.trim().toLowerCase();
-        const pass = document.getElementById('log_pass').value.trim();
-
-        const body = new URLSearchParams({ username: user, password: pass });
-        try {
-            const res = await fetch(`${API_BASE}/admin/login`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
-            const data = await res.json();
-            if (data.success) {
-                currentAdmin = user;
-                localStorage.setItem('admin_logged_user', user);
-                showDashboard();
-            } else {
-                alert(data.msg || "Login failed!");
-            }
-        } catch (e) { alert("Server error!"); }
-    }
-
-    function logout() {
+    // Direct Portal Redirect on Logout
+    function doLogout() {
         localStorage.removeItem('admin_logged_user');
-        currentAdmin = '';
-        document.getElementById('dashView').style.display = 'none';
-        document.getElementById('loginView').style.display = 'block';
+        window.location.replace('/'); // Instant redirect to License Manager Portal
     }
 
-    function showDashboard() {
-        document.getElementById('loginView').style.display = 'none';
-        document.getElementById('dashView').style.display = 'block';
+    // Auth Guard
+    if (!currentAdmin) {
+        window.location.replace('/');
+    } else {
         document.getElementById('dispAdminUser').innerText = `Logged in as @${currentAdmin.toUpperCase()}`;
         loadResellers();
     }
@@ -212,10 +171,6 @@
             if (data.success) { alert("Deleted!"); loadResellers(); }
         } catch (e) { alert("Error!"); }
     }
-
-    window.onload = function() {
-        if (currentAdmin) showDashboard();
-    };
 </script>
 
 </body>
