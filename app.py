@@ -18,7 +18,7 @@ def after_request(response):
 
 FIREBASE_URL = "https://reseller-c0cf4-default-rtdb.firebaseio.com"
 
-# --- BUILT-IN IST DATETIME (NO PYTZ NEEDED) ---
+# --- BUILT-IN IST DATETIME ---
 def get_ist_datetime_str():
     try:
         ist_zone = timezone(timedelta(hours=5, minutes=30))
@@ -26,7 +26,7 @@ def get_ist_datetime_str():
     except Exception:
         return datetime.utcnow().strftime("%d %b %Y, %H:%M")
 
-# --- FIREBASE REST API HELPERS ---
+# --- FIREBASE REST HELPERS ---
 def fb_request(endpoint, data=None, method='GET'):
     try:
         url = f"{FIREBASE_URL}/{endpoint}.json"
@@ -60,7 +60,7 @@ def add_transaction(user, tx_type, amount, details):
     tx_data = {
         "timestamp": now_ts,
         "date": get_ist_datetime_str(),
-        "type": tx_type, # 'debit' ya 'credit'
+        "type": tx_type,
         "amount": float(amount),
         "details": details
     }
