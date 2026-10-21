@@ -9,14 +9,11 @@
         :root {
             --bg: #070913;
             --card: #0F1426;
-            --card-inner: #0A0D1B;
             --input: #080B18;
             --border: #1B223C;
             --primary: #0088FF;
             --primary-glow: #00A3FF;
             --success: #10B981;
-            --danger: #EF4444;
-            --warning: #F59E0B;
             --text-main: #FFFFFF;
             --text-muted: #8490B5;
         }
@@ -202,67 +199,18 @@
             border-radius: 50%;
             box-shadow: 0 0 8px var(--success);
         }
-
-        .dash-container {
-            display: none;
-            width: 100%;
-            max-width: 850px;
-        }
-
-        .card {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-
-        .card-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--primary-glow);
-            text-transform: uppercase;
-            margin-bottom: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-act {
-            border: none;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-danger { background-color: var(--danger); color: #fff; }
-        .btn-success { background-color: var(--success); color: #fff; }
-        .btn-info { background-color: var(--primary); color: #fff; }
-
-        .item-row {
-            background: var(--card-inner);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 14px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
     </style>
 </head>
 <body>
 
-<div class="portal-wrapper" id="portalLoginWrapper">
+<div class="portal-wrapper">
     <div class="login-card">
         <div class="shield-icon-box">🛡️</div>
 
         <div class="portal-title">License Manager</div>
         <div class="portal-subtitle">Secure Admin & Reseller Portal</div>
 
-        <!-- 2 TABS (Admin AK & Reseller) -->
+        <!-- 2 TABS / FOLDERS -->
         <div class="role-tabs">
             <button class="role-tab active" id="tabAdmin" onclick="setRole('admin')">
                 👑 Admin AK
@@ -288,7 +236,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-signin">Sign In to Dashboard →</button>
+            <button type="submit" id="btnSubmit" class="btn-signin">Sign In to Dashboard →</button>
         </form>
 
         <div class="system-status">
@@ -297,39 +245,27 @@
     </div>
 </div>
 
-<!-- ============================================== -->
-<!-- DASHBOARDS -->
-<!-- ============================================== -->
-<div class="dash-container" id="dashContainer">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-        <h2 id="dashWelcome" style="color: #60A5FA; font-size: 18px;">DASHBOARD</h2>
-        <button class="btn-act btn-danger" onclick="doLogout()">↪ Logout</button>
-    </div>
-
-    <div id="dashContent"></div>
-</div>
-
 <script>
     const API_BASE = window.location.origin;
     let selectedRole = 'admin';
-    let loggedUser = '';
 
     function setRole(role) {
         selectedRole = role;
         const tabA = document.getElementById('tabAdmin');
         const tabR = document.getElementById('tabReseller');
         const lbl = document.getElementById('lblUsername');
+        const userInput = document.getElementById('loginUser');
 
         if (role === 'admin') {
             tabA.className = 'role-tab active';
             tabR.className = 'role-tab';
             lbl.innerText = 'ADMIN USERNAME';
-            document.getElementById('loginUser').placeholder = 'Enter admin username';
+            userInput.placeholder = 'Enter admin username';
         } else {
             tabA.className = 'role-tab';
             tabR.className = 'role-tab active';
             lbl.innerText = 'RESELLER USERNAME';
-            document.getElementById('loginUser').placeholder = 'Enter reseller username';
+            userInput.placeholder = 'Enter reseller username';
         }
     }
 
@@ -342,257 +278,66 @@
         e.preventDefault();
         const u = document.getElementById('loginUser').value.trim().toLowerCase();
         const p = document.getElementById('loginPass').value.trim();
+        const btn = document.getElementById('btnSubmit');
 
+        btn.disabled = true;
+        btn.innerText = "Signing in...";
+
+        // 1. ADMIN TAB LOGIN
         if (selectedRole === 'admin') {
-            if (u === 'master' || u === 'admin' || u === 'owner') {
-                loggedUser = u;
-                openDashboard('master');
+            // Master Admin direct check
+            if (u === 'master' || u === 'owner') {
+                window.location.href = '/master';
                 return;
             }
 
+            // Sub-Admin verify
             const body = new URLSearchParams({ username: u, password: p });
             try {
-                const res = await fetch(`${API_BASE}/admin/login`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+                const res = await fetch(`${API_BASE}/admin/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: body
+                });
                 const data = await res.json();
                 if (data.success) {
-                    loggedUser = u;
-                    openDashboard('subadmin');
+                    localStorage.setItem('admin_logged_user', u);
+                    window.location.href = '/admin'; // Redirect to Admin Dashboard
                 } else {
                     alert(data.msg || "Invalid Admin Credentials!");
+                    btn.disabled = false;
+                    btn.innerText = "Sign In to Dashboard →";
                 }
-            } catch (err) { alert("Server connection error!"); }
-        } else {
+            } catch (err) {
+                alert("Server connection error!");
+                btn.disabled = false;
+                btn.innerText = "Sign In to Dashboard →";
+            }
+        } 
+        // 2. RESELLER TAB LOGIN
+        else {
             const body = new URLSearchParams({ username: u, password: p });
             try {
-                const res = await fetch(`${API_BASE}/reseller/login`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+                const res = await fetch(`${API_BASE}/reseller/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: body
+                });
                 const data = await res.json();
                 if (data.success) {
-                    loggedUser = u;
-                    openDashboard('reseller');
+                    localStorage.setItem('reseller_user', u);
+                    window.location.href = '/seller'; // Redirect to 3-Folder Seller Page
                 } else {
                     alert(data.msg || "Invalid Reseller Credentials!");
+                    btn.disabled = false;
+                    btn.innerText = "Sign In to Dashboard →";
                 }
-            } catch (err) { alert("Server connection error!"); }
+            } catch (err) {
+                alert("Server connection error!");
+                btn.disabled = false;
+                btn.innerText = "Sign In to Dashboard →";
+            }
         }
-    }
-
-    function doLogout() {
-        loggedUser = '';
-        document.getElementById('portalLoginWrapper').style.display = 'block';
-        document.getElementById('dashContainer').style.display = 'none';
-        document.getElementById('loginPass').value = '';
-    }
-
-    function openDashboard(type) {
-        document.getElementById('portalLoginWrapper').style.display = 'none';
-        document.getElementById('dashContainer').style.display = 'block';
-
-        if (type === 'master') {
-            document.getElementById('dashWelcome').innerText = `👑 MASTER ADMIN (@${loggedUser.toUpperCase()})`;
-            renderMasterView();
-        } else if (type === 'subadmin') {
-            document.getElementById('dashWelcome').innerText = `🛡️ ADMIN PANEL (@${loggedUser.toUpperCase()})`;
-            renderSubAdminView();
-        } else {
-            document.getElementById('dashWelcome').innerText = `🏪 RESELLER PANEL (@${loggedUser.toUpperCase()})`;
-            renderResellerView();
-        }
-    }
-
-    function renderMasterView() {
-        document.getElementById('dashContent').innerHTML = `
-            <div class="card">
-                <div class="card-title">🛡️ APP KILL-SWITCH & LIVE BROADCAST ALERT</div>
-                <div style="display:flex; gap:10px; margin-bottom:14px;">
-                    <button class="btn-act btn-danger" onclick="setAppStatus('disabled')">🛑 CRASH / DEACTIVATE APP</button>
-                    <button class="btn-act btn-success" onclick="setAppStatus('active')">✅ ACTIVATE APP</button>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <input type="text" id="mAlertTitle" placeholder="Alert Title" style="padding:10px; background:#080B18; color:#fff; border:1px solid #1B223C; border-radius:8px;">
-                    <input type="text" id="mAlertMsg" placeholder="Alert Message" style="padding:10px; background:#080B18; color:#fff; border:1px solid #1B223C; border-radius:8px;">
-                </div>
-                <div style="margin-top:10px; display:flex; gap:8px;">
-                    <button class="btn-act btn-info" onclick="sendAlert(true)">📢 BROADCAST ALERT</button>
-                    <button class="btn-act" style="background:#222849; color:#fff;" onclick="sendAlert(false)">CLEAR</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">👤 CREATE ADMIN ID (SUB-ADMIN)</div>
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px;">
-                    <input type="text" id="mAdminUser" placeholder="Admin Username" style="padding:10px; background:#080B18; color:#fff; border:1px solid #1B223C; border-radius:8px;">
-                    <input type="text" id="mAdminPass" placeholder="Password" style="padding:10px; background:#080B18; color:#fff; border:1px solid #1B223C; border-radius:8px;">
-                    <input type="number" id="mAdminDays" value="30" placeholder="Days" style="padding:10px; background:#080B18; color:#fff; border:1px solid #1B223C; border-radius:8px;">
-                </div>
-                <button class="btn-act btn-success" style="width:100%;" onclick="createAdminId()">CREATE ADMIN ACCOUNT</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title">📋 REGISTERED ADMINS</div>
-                <div id="mAdminsList">Loading...</div>
-            </div>
-        `;
-        loadMasterAdmins();
-    }
-
-    function renderSubAdminView() {
-        document.getElementById('dashContent').innerHTML = `
-            <div class="card">
-                <div class="card-title">👤 CREATE RESELLER ID</div>
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:12px;">
-                    <input type="text" id="saResellerUser" placeholder="Reseller User" style="padding:10px; background:#080B18; color:#fff; border:1px solid #1B223C; border-radius:8px;">
-                    <input type="text" id="saResellerPass" placeholder="Password" style="padding:10px; background:#080B18; color:#fff; border:1px solid #1B223C; border-radius:8px;">
-                    <input type="number" id="saResellerDays" value="30" placeholder="Days" style="padding:10px; background:#080B18; color:#fff; border:1px solid #1B223C; border-radius:8px;">
-                    <input type="number" id="saResellerBal" value="500" placeholder="Initial Bal (₹)" style="padding:10px; background:#080B18; color:#fff; border:1px solid #1B223C; border-radius:8px;">
-                </div>
-                <button class="btn-act btn-success" style="width:100%;" onclick="createResellerByAdmin()">CREATE RESELLER</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title">📋 MY RESELLERS</div>
-                <div id="saResellersList">Loading...</div>
-            </div>
-        `;
-        loadAdminResellers();
-    }
-
-    function renderResellerView() {
-        document.getElementById('dashContent').innerHTML = `
-            <div class="card" style="background: linear-gradient(135deg, #181C38, #14172E);">
-                <div style="font-size: 11px; color: #8E96B5; font-weight: 700;">💳 AAPKA WALLET BALANCE</div>
-                <div id="rBalDisp" style="font-size: 28px; font-weight: 800; color: #fff; margin: 4px 0;">₹0.00</div>
-                <div style="font-size: 12px; color: #7983A8;">1 Din Key = ₹100 | 10 Min Trial = ₹0 Free</div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">⚡ FAST ACTIONS</div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn-act" style="background:#F59E0B; color:#0A0D1B;" onclick="genTrialKey()">⚡ 10 MIN TRIAL (FREE ₹0)</button>
-                    <button class="btn-act btn-info" onclick="genRegularKeyPrompt()">🔑 GENERATE REGULAR KEY (₹100/DAY)</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🔑 MY GENERATED KEYS</div>
-                <div id="rKeysList">Loading keys...</div>
-            </div>
-        `;
-        loadResellerData();
-    }
-
-    async function setAppStatus(st) {
-        if (!confirm(st === 'disabled' ? "Crash app for all users?" : "Activate app?")) return;
-        const b = new URLSearchParams({ status: st, show_alert: st === 'disabled' ? 'true' : 'false', alert_title: "APP STOPPED", alert_msg: "App disabled by Admin." });
-        await fetch(`${API_BASE}/master/set_app_control`, { method: 'POST', body: b });
-        alert("App Status Updated!");
-    }
-
-    async function sendAlert(show) {
-        const t = document.getElementById('mAlertTitle').value.trim();
-        const m = document.getElementById('mAlertMsg').value.trim();
-        if (show && (!t || !m)) return alert("Title aur Message bharein!");
-        const b = new URLSearchParams({ status: 'active', alert_title: t, alert_msg: m, show_alert: show ? 'true' : 'false' });
-        await fetch(`${API_BASE}/master/set_app_control`, { method: 'POST', body: b });
-        alert(show ? "Alert Broadcasted!" : "Alert Cleared!");
-    }
-
-    async function createAdminId() {
-        const u = document.getElementById('mAdminUser').value.trim().toLowerCase();
-        const p = document.getElementById('mAdminPass').value.trim();
-        const d = document.getElementById('mAdminDays').value;
-        const b = new URLSearchParams({ username: u, password: p, days: d });
-        const res = await fetch(`${API_BASE}/master/create_admin`, { method: 'POST', body: b });
-        const data = await res.json();
-        alert(data.msg || "Created");
-        loadMasterAdmins();
-    }
-
-    async function loadMasterAdmins() {
-        const res = await fetch(`${API_BASE}/master/get_admins`);
-        const list = await res.json();
-        let html = '';
-        list.forEach(a => {
-            html += `<div class="item-row"><div><b>👑 ${a.username.toUpperCase()}</b><div style="font-size:11px; color:#8490B5;">Pass: ${a.password}</div></div><button class="btn-act btn-danger" onclick="delAdmin('${a.username}')">DELETE</button></div>`;
-        });
-        document.getElementById('mAdminsList').innerHTML = html || 'No admins created.';
-    }
-
-    async function delAdmin(user) {
-        if (!confirm(`Delete admin ${user}?`)) return;
-        await fetch(`${API_BASE}/master/delete_admin`, { method: 'POST', body: new URLSearchParams({ username: user }) });
-        loadMasterAdmins();
-    }
-
-    async function createResellerByAdmin() {
-        const u = document.getElementById('saResellerUser').value.trim().toLowerCase();
-        const p = document.getElementById('saResellerPass').value.trim();
-        const d = document.getElementById('saResellerDays').value;
-        const bal = document.getElementById('saResellerBal').value;
-        const b = new URLSearchParams({ admin_user: loggedUser, username: u, password: p, days: d, balance: bal });
-        const res = await fetch(`${API_BASE}/admin/create_reseller`, { method: 'POST', body: b });
-        const data = await res.json();
-        alert(data.msg || "Created");
-        loadAdminResellers();
-    }
-
-    async function loadAdminResellers() {
-        const res = await fetch(`${API_BASE}/admin/get_resellers?admin_user=${encodeURIComponent(loggedUser)}`);
-        const list = await res.json();
-        let html = '';
-        list.forEach(r => {
-            html += `<div class="item-row"><div><b>👤 ${r.username.toUpperCase()}</b><div style="font-size:11px; color:#8490B5;">Wallet: ₹${r.balance || 0} | Pass: ${r.password}</div></div><div><button class="btn-act btn-success" onclick="rechargeReseller('${r.username}')">+ RECHARGE</button> <button class="btn-act btn-danger" onclick="delReseller('${r.username}')">DEL</button></div></div>`;
-        });
-        document.getElementById('saResellersList').innerHTML = html || 'No resellers created.';
-    }
-
-    async function rechargeReseller(user) {
-        const amt = prompt(`Recharge amount for ${user}:`, "500");
-        if (!amt) return;
-        await fetch(`${API_BASE}/admin/recharge_reseller`, { method: 'POST', body: new URLSearchParams({ admin_user: loggedUser, username: user, amount: amt }) });
-        alert("Recharged!");
-        loadAdminResellers();
-    }
-
-    async function delReseller(user) {
-        if (!confirm(`Delete reseller ${user}?`)) return;
-        await fetch(`${API_BASE}/admin/delete_reseller`, { method: 'POST', body: new URLSearchParams({ username: user }) });
-        loadAdminResellers();
-    }
-
-    async function loadResellerData() {
-        const res = await fetch(`${API_BASE}/reseller/data?username=${encodeURIComponent(loggedUser)}`);
-        const data = await res.json();
-        document.getElementById('rBalDisp').innerText = `₹${(data.balance || 0).toFixed(2)}`;
-        let html = '';
-        (data.keys || []).forEach(k => {
-            html += `<div class="item-row"><div><b>${k.key}</b><div style="font-size:11px; color:#8490B5;">${k.plan} | HWID: ${k.hwid ? k.hwid.slice(0,14)+'...' : 'Khali'}</div></div><div><button class="btn-act btn-info" onclick="navigator.clipboard.writeText('${k.key}'); alert('Copied!');">COPY</button> <button class="btn-act" style="background:#F59E0B; color:#000;" onclick="resetHwid('${k.key}')">RESET HWID</button></div></div>`;
-        });
-        document.getElementById('rKeysList').innerHTML = html || 'No keys generated.';
-    }
-
-    async function genTrialKey() {
-        const k = "TRIAL-" + Math.random().toString(36).substring(2,6).toUpperCase();
-        await fetch(`${API_BASE}/reseller/generate_key`, { method: 'POST', body: new URLSearchParams({ username: loggedUser, key: k, plan: 'trial' }) });
-        alert(`Trial Key Generated: ${k}`);
-        loadResellerData();
-    }
-
-    async function genRegularKeyPrompt() {
-        const days = prompt("Kitne din ki key banani hai? (1 Din = ₹100)", "1");
-        if (!days) return;
-        const k = "VIP-" + Math.random().toString(36).substring(2,6).toUpperCase() + "-" + Math.random().toString(36).substring(2,6).toUpperCase();
-        const exp = Date.now() + (parseInt(days) * 24 * 3600 * 1000);
-        const res = await fetch(`${API_BASE}/reseller/generate_key`, { method: 'POST', body: new URLSearchParams({ username: loggedUser, key: k, expiry_timestamp: exp.toString() }) });
-        const d = await res.json();
-        if (d.success) alert(`Key Generated: ${k}`); else alert(d.msg || "Failed");
-        loadResellerData();
-    }
-
-    async function resetHwid(k) {
-        if (!confirm(`Reset HWID for ${k}?`)) return;
-        await fetch(`${API_BASE}/reseller/edit_key`, { method: 'POST', body: new URLSearchParams({ username: loggedUser, key: k, reset_hwid: 'true' }) });
-        alert("HWID Reset Done!");
-        loadResellerData();
     }
 </script>
 
