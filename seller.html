@@ -14,7 +14,6 @@
             --primary: #4F6BFF;
             --success: #10B981;
             --danger: #EF4444;
-            --warning: #F59E0B;
             --debit-badge: #FF4D6D;
             --text-main: #FFFFFF;
             --text-muted: #8E96B5;
@@ -190,7 +189,7 @@
             gap: 6px;
         }
 
-        /* Table (Screenshot Match) */
+        /* Transactions Table */
         .tx-table-container {
             overflow-x: auto;
         }
@@ -246,7 +245,7 @@
         .tx-amount-credit { color: #34D399; font-weight: 700; white-space: nowrap; }
         .tx-details { color: #8E96B5; font-family: monospace; font-size: 11px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* Keys UI */
+        /* Keys Item Box */
         .key-box {
             background-color: var(--card-inner);
             border: 1px solid var(--border);
@@ -303,6 +302,28 @@
         .btn-edit { background: rgba(56, 189, 248, 0.2); color: #38BDF8; }
         .btn-del { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
 
+        /* Profile Details Grid */
+        .profile-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .profile-row:last-child {
+            border-bottom: none;
+        }
+
+        .profile-title {
+            color: var(--text-muted);
+        }
+
+        .profile-value {
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
         /* Modal */
         .modal {
             display: none;
@@ -337,7 +358,7 @@
             margin-top: 14px;
         }
 
-        /* Bottom Nav */
+        /* Bottom Navigation Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -381,7 +402,7 @@
 
 <div class="container">
 
-    <!-- 1. LOGIN SCREEN -->
+    <!-- 1. RESELLER LOGIN -->
     <div id="loginView">
         <h2 class="login-title">RESELLER LOGIN</h2>
         <form onsubmit="handleLogin(event)">
@@ -397,7 +418,7 @@
         </form>
     </div>
 
-    <!-- 2. DASHBOARD VIEW -->
+    <!-- 2. RESELLER DASHBOARD (3 FOLDERS / TABS) -->
     <div id="dashView" style="display: none;">
 
         <div class="panel-header">
@@ -411,14 +432,18 @@
             </div>
         </div>
 
-        <!-- TAB 1: BALANCE & TRANSACTIONS (SCREENSHOT STYLE) -->
-        <div id="tabBalanceView">
+        <!-- ============================================== -->
+        <!-- FOLDER 1: 💳 WALLET & TRANSACTIONS PASSBOOK -->
+        <!-- ============================================== -->
+        <div id="tabWalletView">
+            <!-- AAPKA BALANCE CARD -->
             <div class="balance-card">
                 <div class="balance-label">💳 AAPKA BALANCE</div>
                 <div class="balance-amount" id="statBalance">₹0.00</div>
                 <div class="balance-subtext">Key generate karne par price balance se cut hoga</div>
             </div>
 
+            <!-- TRANSACTIONS HISTORY TABLE -->
             <div class="card">
                 <div class="card-header-title">
                     <span>⇄ Transactions</span>
@@ -435,22 +460,23 @@
                             </tr>
                         </thead>
                         <tbody id="txTableBody">
-                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:25px;">Loading...</td></tr>
+                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:25px;">Loading transactions...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 2: KEYS VIEW -->
+        <!-- ============================================== -->
+        <!-- FOLDER 2: 🔑 KEYS GENERATE & MANAGE -->
+        <!-- ============================================== -->
         <div id="tabKeysView" style="display: none;">
-            
-            <!-- 10 MINUTES TRIAL FAST BUTTON -->
+            <!-- 10 MIN FREE TRIAL BUTTON -->
             <button type="button" class="btn-submit btn-trial" onclick="generateTrialKey()">
                 ⚡ GENERATE 10 MINUTES TRIAL KEY (FREE ₹0)
             </button>
 
-            <!-- Standard Key Generator Card -->
+            <!-- REGULAR KEY GENERATOR -->
             <div class="card">
                 <div class="card-header-title">
                     <span>🔑 Generate Regular VIP Key</span>
@@ -473,20 +499,47 @@
                 </form>
             </div>
 
-            <!-- Keys List -->
+            <!-- KEYS LIST -->
             <div class="card">
                 <div class="card-header-title">
-                    <span>Generated Keys</span>
+                    <span>My Generated Keys</span>
                     <button class="btn-act btn-copy" onclick="loadDashboard()">REFRESH</button>
                 </div>
                 <div id="keysContainer"><div style="text-align:center; color:var(--text-muted); padding:20px;">Loading keys...</div></div>
             </div>
         </div>
 
-        <!-- TAB 3: CONTACT LINKS VIEW -->
-        <div id="tabContactView" style="display: none;">
+        <!-- ============================================== -->
+        <!-- FOLDER 3: 👤 PROFILE & CONTACT SETTINGS -->
+        <!-- ============================================== -->
+        <div id="tabProfileView" style="display: none;">
+            <!-- ACCOUNT DETAILS CARD -->
             <div class="card">
-                <div class="card-header-title">📱 Dialog Contact Links</div>
+                <div class="card-header-title">👤 Reseller Profile</div>
+                <div class="profile-row">
+                    <span class="profile-title">Username:</span>
+                    <span class="profile-value" id="profUsername">--</span>
+                </div>
+                <div class="profile-row">
+                    <span class="profile-title">Account Status:</span>
+                    <span class="profile-value" style="color: #10B981;" id="profStatus">ACTIVE</span>
+                </div>
+                <div class="profile-row">
+                    <span class="profile-title">Account Validity:</span>
+                    <span class="profile-value" id="profExpiry">--</span>
+                </div>
+                <div class="profile-row">
+                    <span class="profile-title">Total Keys Generated:</span>
+                    <span class="profile-value" style="color: #60A5FA;" id="profTotalKeys">0</span>
+                </div>
+            </div>
+
+            <!-- DIALOG CONTACT LINKS CARD -->
+            <div class="card">
+                <div class="card-header-title">📱 App Dialog Contact Links</div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">
+                    Jab customer galat/expired key enter karega, toh yahi WhatsApp aur Telegram button khulega:
+                </div>
                 <form onsubmit="updateContactLinks(event)">
                     <div class="input-group">
                         <label>WhatsApp Link / Number</label>
@@ -530,11 +583,17 @@
     </div>
 </div>
 
-<!-- BOTTOM NAVIGATION BAR -->
+<!-- 3 BOTTOM NAVIGATION FOLDERS (WALLET, KEYS, PROFILE) -->
 <div class="bottom-nav" id="bottomNavBar" style="display: none;">
-    <div class="nav-item" id="navItemKeys" onclick="switchTab('keys')"><span style="font-size:16px;">🔑</span><span>Keys</span></div>
-    <div class="nav-item active" id="navItemBalance" onclick="switchTab('balance')"><div class="nav-btn-pill"><span>💳</span><span>Balance</span></div></div>
-    <div class="nav-item" id="navItemContact" onclick="switchTab('contact')"><span style="font-size:16px;">📱</span><span>Contact</span></div>
+    <div class="nav-item active" id="navItemWallet" onclick="switchFolder('wallet')">
+        <div class="nav-btn-pill"><span>💳</span><span>Wallet</span></div>
+    </div>
+    <div class="nav-item" id="navItemKeys" onclick="switchFolder('keys')">
+        <span style="font-size:16px;">🔑</span><span>Keys</span>
+    </div>
+    <div class="nav-item" id="navItemProfile" onclick="switchFolder('profile')">
+        <span style="font-size:16px;">👤</span><span>Profile</span>
+    </div>
 </div>
 
 <script>
@@ -544,18 +603,19 @@
     let calculatedTimestamp = 0;
     let editingKey = '';
 
-    function switchTab(tab) {
-        document.getElementById('tabBalanceView').style.display = tab === 'balance' ? 'block' : 'none';
-        document.getElementById('tabKeysView').style.display = tab === 'keys' ? 'block' : 'none';
-        document.getElementById('tabContactView').style.display = tab === 'contact' ? 'block' : 'none';
+    // 3 FOLDERS SWITCHER (WALLET, KEYS, PROFILE)
+    function switchFolder(folder) {
+        document.getElementById('tabWalletView').style.display = folder === 'wallet' ? 'block' : 'none';
+        document.getElementById('tabKeysView').style.display = folder === 'keys' ? 'block' : 'none';
+        document.getElementById('tabProfileView').style.display = folder === 'profile' ? 'block' : 'none';
 
-        document.getElementById('navItemKeys').className = 'nav-item' + (tab === 'keys' ? ' active' : '');
-        document.getElementById('navItemBalance').className = 'nav-item' + (tab === 'balance' ? ' active' : '');
-        document.getElementById('navItemContact').className = 'nav-item' + (tab === 'contact' ? ' active' : '');
+        document.getElementById('navItemWallet').className = 'nav-item' + (folder === 'wallet' ? ' active' : '');
+        document.getElementById('navItemKeys').className = 'nav-item' + (folder === 'keys' ? ' active' : '');
+        document.getElementById('navItemProfile').className = 'nav-item' + (folder === 'profile' ? ' active' : '');
 
-        document.getElementById('navItemKeys').innerHTML = tab === 'keys' ? '<div class="nav-btn-pill"><span>🔑</span><span>Keys</span></div>' : '<span style="font-size:16px;">🔑</span><span>Keys</span>';
-        document.getElementById('navItemBalance').innerHTML = tab === 'balance' ? '<div class="nav-btn-pill"><span>💳</span><span>Balance</span></div>' : '<span style="font-size:16px;">💳</span><span>Balance</span>';
-        document.getElementById('navItemContact').innerHTML = tab === 'contact' ? '<div class="nav-btn-pill"><span>📱</span><span>Contact</span></div>' : '<span style="font-size:16px;">📱</span><span>Contact</span>';
+        document.getElementById('navItemWallet').innerHTML = folder === 'wallet' ? '<div class="nav-btn-pill"><span>💳</span><span>Wallet</span></div>' : '<span style="font-size:16px;">💳</span><span>Wallet</span>';
+        document.getElementById('navItemKeys').innerHTML = folder === 'keys' ? '<div class="nav-btn-pill"><span>🔑</span><span>Keys</span></div>' : '<span style="font-size:16px;">🔑</span><span>Keys</span>';
+        document.getElementById('navItemProfile').innerHTML = folder === 'profile' ? '<div class="nav-btn-pill"><span>👤</span><span>Profile</span></div>' : '<span style="font-size:16px;">👤</span><span>Profile</span>';
     }
 
     function initDatePicker() {
@@ -624,6 +684,7 @@
         document.getElementById('dashView').style.display = 'block';
         document.getElementById('bottomNavBar').style.display = 'flex';
         document.getElementById('dispUser').innerText = `👤 ${currentUser.toUpperCase()}`;
+        document.getElementById('profUsername').innerText = `@${currentUser.toUpperCase()}`;
         makeRandomKey();
         loadDashboard();
     }
@@ -641,8 +702,23 @@
                 document.getElementById('dispDateTime').innerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ", " + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             }
 
+            // Wallet Balance
             document.getElementById('statBalance').innerText = `₹${(data.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+
+            // Profile Info
+            const exp = data.expiry_timestamp || 0;
+            if (exp > 0) {
+                const remDays = Math.ceil((exp - (currentServerTime || Date.now())) / (1000 * 60 * 60 * 24));
+                document.getElementById('profExpiry').innerText = `${remDays} Din baaki (${new Date(exp).toLocaleDateString('en-GB')})`;
+            } else {
+                document.getElementById('profExpiry').innerText = "Unlimited / Lifetime";
+            }
+            document.getElementById('profTotalKeys').innerText = (data.keys || []).length;
+
+            // Render Transactions Table (Passbook)
             renderTransactions(data.transactions || []);
+
+            // Render Keys List
             renderKeys(data.keys || [], currentServerTime);
 
             if (data.whatsapp) document.getElementById('contact_whatsapp').value = data.whatsapp;
@@ -651,6 +727,7 @@
         } catch (err) {}
     }
 
+    // Transactions History Table
     function renderTransactions(txs) {
         const tbody = document.getElementById('txTableBody');
         document.getElementById('txCountBadge').innerText = `(${txs.length})`;
@@ -673,6 +750,7 @@
         tbody.innerHTML = html;
     }
 
+    // Keys List View
     function renderKeys(keys, realServerTime) {
         const container = document.getElementById('keysContainer');
         if (keys.length === 0) {
@@ -694,7 +772,6 @@
             let expDisplay = 'No Expiry';
             if (exp > 0) {
                 const expDate = new Date(exp);
-                // Agar 10 min trial hai toh time show karein
                 if (k.plan && k.plan.includes('Trial')) {
                     expDisplay = expDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " (Today)";
                 } else {
@@ -728,27 +805,21 @@
         navigator.clipboard.writeText(key).then(() => alert(`Key Copied: ${key}`));
     }
 
-    // 10 MINUTES FREE TRIAL GENERATE
+    // 10 MIN TRIAL
     async function generateTrialKey() {
         if (!confirm("10 Minutes Free Trial Key banani hai?")) return;
-
         const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
         let r1 = "", r2 = "";
         for (let i = 0; i < 4; i++) r1 += chars.charAt(Math.floor(Math.random() * chars.length));
         for (let i = 0; i < 4; i++) r2 += chars.charAt(Math.floor(Math.random() * chars.length));
         const trialKey = "TRIAL-" + r1 + "-" + r2;
 
-        const body = new URLSearchParams({
-            username: currentUser,
-            key: trialKey,
-            plan: 'trial'
-        });
-
+        const body = new URLSearchParams({ username: currentUser, key: trialKey, plan: 'trial' });
         try {
             const res = await fetch(`${API_BASE}/reseller/generate_key`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
             if (data.success) {
-                alert(`⚡ 10 MIN TRIAL KEY GENERATED!\nKey: ${trialKey}\nValidity: 10 Minutes\nCost: ₹0 (Free)`);
+                alert(`⚡ 10 MIN TRIAL KEY GENERATED!\nKey: ${trialKey}\nCost: ₹0 (Free)`);
                 loadDashboard();
             } else {
                 alert(data.msg || "Trial generation failed!");
@@ -756,7 +827,7 @@
         } catch (err) { alert("Error generating trial key"); }
     }
 
-    // STANDARD KEY GENERATE
+    // REGULAR KEY GENERATION
     async function generateKey(e) {
         e.preventDefault();
         const key = document.getElementById('new_key').value.trim().toUpperCase();
@@ -770,12 +841,11 @@
                 makeRandomKey();
                 initDatePicker();
                 loadDashboard();
-                switchTab('balance');
+                switchFolder('wallet'); // Key bante hi seedha passbook statement dikhayega
             } else { alert(data.msg || "Failed"); }
         } catch (err) { alert("Error generating key"); }
     }
 
-    // QUICK RESET HWID
     async function quickResetHwid(key) {
         if (!confirm(`Key [${key}] ka Device HWID reset karein?`)) return;
         const body = new URLSearchParams({ username: currentUser, key: key, reset_hwid: 'true' });
@@ -787,7 +857,6 @@
         } catch (err) { alert("Reset fail!"); }
     }
 
-    // EDIT MODAL LOGIC
     function openEditModal(key, curStatus) {
         editingKey = key;
         document.getElementById('editKeyName').innerText = key;
@@ -804,14 +873,7 @@
     async function submitEditKey() {
         const st = document.getElementById('editStatus').value;
         const resetHwid = document.getElementById('editResetHwid').checked;
-
-        const body = new URLSearchParams({
-            username: currentUser,
-            key: editingKey,
-            status: st,
-            reset_hwid: resetHwid ? 'true' : 'false'
-        });
-
+        const body = new URLSearchParams({ username: currentUser, key: editingKey, status: st, reset_hwid: resetHwid ? 'true' : 'false' });
         try {
             const res = await fetch(`${API_BASE}/reseller/edit_key`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
