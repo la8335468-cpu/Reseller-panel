@@ -12,324 +12,48 @@
             --card-inner: #0D0F1B;
             --input: #0D0F1C;
             --primary: #6366F1;
-            --primary-hover: #4F46E5;
             --success: #10B981;
             --danger: #EF4444;
-            --warning: #F59E0B;
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
             --border: #1E233D;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            padding: 24px 16px;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .header h1 {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: var(--primary);
-        }
-
-        .btn-refresh {
-            background-color: var(--border);
-            color: #38BDF8;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-refresh:hover {
-            opacity: 0.85;
-        }
-
-        .card {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 22px;
-            margin-bottom: 24px;
-        }
-
-        .card-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 18px;
-            letter-spacing: 0.5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .status-pill {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 6px;
-            letter-spacing: 0.5px;
-        }
-
-        .status-online {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .status-offline {
-            background-color: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 14px;
-            margin-bottom: 16px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        .input-group input {
-            width: 100%;
-            background-color: var(--input);
-            border: 1px solid var(--border);
-            color: #fff;
-            padding: 12px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .input-group input:focus {
-            border-color: var(--primary);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn-action {
-            flex: 1;
-            min-width: 180px;
-            padding: 13px;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-action:hover {
-            opacity: 0.9;
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-            color: #fff;
-        }
-
-        .btn-success {
-            background-color: var(--success);
-            color: #fff;
-        }
-
-        .btn-info {
-            background-color: #38BDF8;
-            color: #0B0C16;
-        }
-
-        .btn-secondary {
-            background-color: var(--border);
-            color: #F8FAFC;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background-color: var(--success);
-            color: #fff;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-submit:hover {
-            opacity: 0.9;
-        }
-
-        .reseller-item {
-            background-color: var(--card-inner);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 16px 18px;
-            margin-bottom: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .item-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .username {
-            font-size: 16px;
-            font-weight: 700;
-            color: #60A5FA;
-        }
-
-        .badge {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-
-        .badge-active {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-        }
-
-        .badge-expired {
-            background-color: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-        }
-
-        .item-details {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        .item-details span {
-            color: var(--text-main);
-            font-weight: 600;
-        }
-
-        .item-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 6px;
-        }
-
-        .btn-recharge {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-delete {
-            background-color: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .empty-text {
-            color: var(--text-muted);
-            font-size: 13px;
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            z-index: 100;
-        }
-
-        .modal-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 22px;
-            width: 100%;
-            max-width: 380px;
-        }
-
-        .modal-card h3 {
-            font-size: 15px;
-            margin-bottom: 12px;
-            color: var(--text-main);
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 18px;
-        }
-
-        .btn-cancel {
-            background: transparent;
-            color: var(--text-muted);
-            border: none;
-            padding: 8px 14px;
-            cursor: pointer;
-            font-size: 13px;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); padding: 24px 16px; min-height: 100vh; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .header h1 { font-size: 20px; font-weight: 800; color: var(--primary); }
+        .btn-refresh { background-color: var(--border); color: #38BDF8; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .card { background-color: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; margin-bottom: 24px; }
+        .card-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; }
+        .status-pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
+        .status-online { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-offline { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px; }
+        .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+        .input-group input { width: 100%; background-color: var(--input); border: 1px solid var(--border); color: #fff; padding: 12px 14px; border-radius: 8px; font-size: 14px; outline: none; }
+        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-action { flex: 1; min-width: 180px; padding: 13px; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-align: center; }
+        .btn-danger { background-color: var(--danger); color: #fff; }
+        .btn-success { background-color: var(--success); color: #fff; }
+        .btn-info { background-color: #38BDF8; color: #0B0C16; }
+        .btn-secondary { background-color: var(--border); color: #F8FAFC; }
+        .btn-submit { width: 100%; background-color: var(--success); color: #fff; border: none; padding: 14px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+        .reseller-item { background-color: var(--card-inner); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
+        .item-top { display: flex; justify-content: space-between; align-items: center; }
+        .username { font-size: 16px; font-weight: 700; color: #60A5FA; }
+        .badge { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
+        .badge-active { background-color: rgba(16, 185, 129, 0.15); color: var(--success); }
+        .badge-expired { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .item-details { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+        .item-details span { color: var(--text-main); font-weight: 600; }
+        .item-actions { display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-recharge { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .btn-delete { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; padding: 16px; z-index: 100; }
+        .modal-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; width: 100%; max-width: 380px; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+        .btn-cancel { background: transparent; color: var(--text-muted); border: none; padding: 8px 14px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -340,43 +64,30 @@
         <button class="btn-refresh" onclick="loadAll()">REFRESH ALL</button>
     </div>
 
-    <!-- 1. APP REMOTE KILL-SWITCH & BROADCAST ALERT CARD -->
+    <!-- 1. APP REMOTE CONTROL CARD -->
     <div class="card">
         <div class="card-title">
             <span>APP REMOTE KILL-SWITCH & BROADCAST ALERT</span>
             <span id="appStatusBadge" class="status-pill status-online">CHECKING...</span>
         </div>
-
         <div class="btn-group" style="margin-bottom: 20px;">
-            <button type="button" class="btn-action btn-danger" onclick="setAppStatus('disabled')">
-                🛑 CRASH / DEACTIVATE APP
-            </button>
-            <button type="button" class="btn-action btn-success" onclick="setAppStatus('active')">
-                ✅ ACTIVATE APP
-            </button>
+            <button type="button" class="btn-action btn-danger" onclick="setAppStatus('disabled')">🛑 CRASH / DEACTIVATE APP</button>
+            <button type="button" class="btn-action btn-success" onclick="setAppStatus('active')">✅ ACTIVATE APP</button>
         </div>
-
-        <div style="border-top: 1px solid var(--border); padding-top: 18px; margin-bottom: 14px;">
-            <div style="font-size: 12px; font-weight: 700; color: #38BDF8; margin-bottom: 12px; text-transform: uppercase;">
-                Send Live Alert Dialog to All Users
-            </div>
+        <div style="border-top: 1px solid var(--border); padding-top: 18px;">
             <div class="form-grid">
                 <div class="input-group">
-                    <label>Alert Popup Title</label>
-                    <input type="text" id="alert_title" placeholder="e.g. Important Notice / Maintenance">
+                    <label>Alert Title</label>
+                    <input type="text" id="alert_title" placeholder="Notice / Maintenance">
                 </div>
                 <div class="input-group">
-                    <label>Alert Popup Message</label>
-                    <input type="text" id="alert_msg" placeholder="e.g. Server maintenance underway. App will resume shortly.">
+                    <label>Alert Message</label>
+                    <input type="text" id="alert_msg" placeholder="Server maintenance. App will resume shortly.">
                 </div>
             </div>
             <div class="btn-group">
-                <button type="button" class="btn-action btn-info" onclick="sendAppAlert(true)">
-                    📢 BROADCAST ALERT TO APP
-                </button>
-                <button type="button" class="btn-action btn-secondary" onclick="sendAppAlert(false)">
-                    ❌ CLEAR / REMOVE ALERT
-                </button>
+                <button type="button" class="btn-action btn-info" onclick="sendAppAlert(true)">📢 BROADCAST ALERT</button>
+                <button type="button" class="btn-action btn-secondary" onclick="sendAppAlert(false)">❌ CLEAR ALERT</button>
             </div>
         </div>
     </div>
@@ -388,11 +99,11 @@
             <div class="form-grid">
                 <div class="input-group">
                     <label>Reseller User ID</label>
-                    <input type="text" id="new_user" placeholder="e.g. aman / vip_seller" required>
+                    <input type="text" id="new_user" placeholder="e.g. aman / vip_user" required>
                 </div>
                 <div class="input-group">
                     <label>Password</label>
-                    <input type="text" id="new_pass" placeholder="e.g. pass1234" required>
+                    <input type="text" id="new_pass" placeholder="password" required>
                 </div>
                 <div class="input-group">
                     <label>Validity Days</label>
@@ -407,22 +118,20 @@
         </form>
     </div>
 
-    <!-- 3. RESELLERS LIST CARD -->
+    <!-- 3. RESELLERS LIST -->
     <div class="card">
         <div class="card-title">REGISTERED RESELLERS</div>
-        <div id="resellerList">
-            <div class="empty-text">Loading resellers...</div>
-        </div>
+        <div id="resellerList"><div style="text-align:center; color:var(--text-muted); padding:20px;">Loading resellers...</div></div>
     </div>
 </div>
 
-<!-- Custom Recharge Modal -->
+<!-- Recharge Modal -->
 <div class="modal" id="rechargeModal">
     <div class="modal-card">
-        <h3>Recharge Wallet (<span id="modalUsername"></span>)</h3>
+        <h3 style="margin-bottom:12px;">Recharge Wallet (<span id="modalUsername"></span>)</h3>
         <div class="input-group">
-            <label>Amount to Add (₹)</label>
-            <input type="number" id="rechargeAmount" placeholder="e.g. 50, 100, 500" min="1">
+            <label>Amount (₹)</label>
+            <input type="number" id="rechargeAmount" placeholder="50, 100, 500" min="1">
         </div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -444,85 +153,43 @@
         try {
             const res = await fetch(`${API_BASE}/admin/get_app_control`);
             const data = await res.json();
-
             const badge = document.getElementById('appStatusBadge');
             if (data.status === 'disabled') {
-                badge.innerText = 'APP STATUS: DISABLED (CRASH)';
+                badge.innerText = 'APP: DISABLED (CRASH)';
                 badge.className = 'status-pill status-offline';
             } else {
-                badge.innerText = 'APP STATUS: ACTIVE (NORMAL)';
+                badge.innerText = 'APP: ACTIVE (NORMAL)';
                 badge.className = 'status-pill status-online';
             }
-
             if (data.show_alert) {
                 document.getElementById('alert_title').value = data.alert_title || '';
                 document.getElementById('alert_msg').value = data.alert_msg || '';
             }
-        } catch (e) {
-            console.error("App control load error", e);
-        }
+        } catch (e) {}
     }
 
     async function setAppStatus(status) {
-        const confirmMsg = status === 'disabled'
-            ? "⚠️ KYA AAP SACH ME SABHI USERS KE PHONE ME APP CRASH / BAND KARNA CHAHTE HAIN?"
-            : "✅ Kya aap app ko dobara NORMAL ACTIVATE karna chahte hain?";
-
-        if (!confirm(confirmMsg)) return;
-
-        const body = new URLSearchParams({
-            status: status,
-            alert_title: status === 'disabled' ? "APP STOPPED" : "",
-            alert_msg: status === 'disabled' ? "App is temporarily disabled by Master Admin." : "",
-            show_alert: status === 'disabled' ? 'true' : 'false'
-        });
-
+        if (!confirm(status === 'disabled' ? "Crash/Disable all app users?" : "Activate app?")) return;
+        const body = new URLSearchParams({ status: status, show_alert: status === 'disabled' ? 'true' : 'false', alert_title: status === 'disabled' ? "APP STOPPED" : "", alert_msg: status === 'disabled' ? "App disabled by admin." : "" });
         try {
-            const res = await fetch(`${API_BASE}/admin/set_app_control`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: body
-            });
+            const res = await fetch(`${API_BASE}/admin/set_app_control`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
-            alert(data.msg || "Status Updated");
+            alert(data.msg || "Updated");
             loadAppControl();
-        } catch (e) {
-            alert("Error updating status!");
-        }
+        } catch (e) { alert("Error"); }
     }
 
     async function sendAppAlert(showAlert) {
         const title = document.getElementById('alert_title').value.trim();
         const msg = document.getElementById('alert_msg').value.trim();
-
-        if (showAlert && (!title || !msg)) {
-            alert("Title aur Message dono enter karein!");
-            return;
-        }
-
-        const body = new URLSearchParams({
-            status: 'active',
-            alert_title: title,
-            alert_msg: msg,
-            show_alert: showAlert ? 'true' : 'false'
-        });
-
+        if (showAlert && (!title || !msg)) { alert("Title and Message required!"); return; }
+        const body = new URLSearchParams({ status: 'active', alert_title: title, alert_msg: msg, show_alert: showAlert ? 'true' : 'false' });
         try {
-            const res = await fetch(`${API_BASE}/admin/set_app_control`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: body
-            });
+            const res = await fetch(`${API_BASE}/admin/set_app_control`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
-            alert(showAlert ? "Alert dialog sabhi apps par bhej diya gaya!" : "Alert dialog hata diya gaya!");
-            if (!showAlert) {
-                document.getElementById('alert_title').value = '';
-                document.getElementById('alert_msg').value = '';
-            }
+            alert(showAlert ? "Alert Broadcasted!" : "Alert Cleared!");
             loadAppControl();
-        } catch (e) {
-            alert("Error broadcasting alert!");
-        }
+        } catch (e) { alert("Error"); }
     }
 
     async function loadResellers() {
@@ -530,68 +197,47 @@
         try {
             const res = await fetch(`${API_BASE}/admin/get_resellers`);
             const data = await res.json();
-
             if (!data || data.length === 0) {
-                container.innerHTML = '<div class="empty-text">Koi reseller create nahi hai.</div>';
+                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">Koi reseller nahi hai.</div>';
                 return;
             }
-
             const now = Date.now();
             let html = '';
-
             data.forEach(r => {
                 const exp = r.expiry_timestamp || 0;
                 const remDays = exp > 0 ? Math.ceil((exp - now) / (1000 * 60 * 60 * 24)) : 0;
                 const isExpired = remDays <= 0 && exp > 0;
-                const expDateStr = exp > 0 ? new Date(exp).toLocaleDateString('en-GB') : 'Unlimited';
-
                 html += `
                     <div class="reseller-item">
                         <div class="item-top">
                             <span class="username">${String(r.username).toUpperCase()}</span>
-                            <span class="badge ${isExpired ? 'badge-expired' : 'badge-active'}">
-                                ${isExpired ? 'EXPIRED' : remDays + ' DIN BAAKI'}
-                            </span>
+                            <span class="badge ${isExpired ? 'badge-expired' : 'badge-active'}">${isExpired ? 'EXPIRED' : remDays + ' DIN BAAKI'}</span>
                         </div>
                         <div class="item-details">
                             Password: <span>${r.password || 'N/A'}</span><br>
-                            Wallet: <span>₹${(r.balance || 0).toFixed(2)}</span> | Valid Till: <span>${expDateStr}</span><br>
-                            WhatsApp: <span>${r.whatsapp || 'Default'}</span> | Telegram: <span>${r.telegram || 'Default'}</span>
+                            Wallet: <span>₹${(r.balance || 0).toFixed(2)}</span> | WhatsApp: <span>${r.whatsapp || 'Default'}</span>
                         </div>
                         <div class="item-actions">
-                            <button class="btn-recharge" onclick="openRechargeModal('${r.username}')">+ RECHARGE (₹)</button>
-                            <button class="btn-delete" onclick="deleteReseller('${r.username}')">DELETE ID</button>
+                            <button class="btn-recharge" onclick="openRechargeModal('${r.username}')">+ RECHARGE</button>
+                            <button class="btn-delete" onclick="deleteReseller('${r.username}')">DELETE</button>
                         </div>
                     </div>
                 `;
             });
-
             container.innerHTML = html;
-        } catch (err) {
-            container.innerHTML = '<div class="empty-text">Server load hone mein issue hai. Refresh karein.</div>';
-        }
+        } catch (e) { container.innerHTML = '<div style="color:red; text-align:center;">Load fail</div>'; }
     }
 
     async function createReseller(e) {
         e.preventDefault();
-        const user = document.getElementById('new_user').value.trim().toLowerCase();
-        const pass = document.getElementById('new_pass').value.trim();
-        const days = document.getElementById('new_days').value;
-        const balance = document.getElementById('new_balance').value;
-
         const body = new URLSearchParams({
-            username: user,
-            password: pass,
-            days: days,
-            balance: balance
+            username: document.getElementById('new_user').value.trim().toLowerCase(),
+            password: document.getElementById('new_pass').value.trim(),
+            days: document.getElementById('new_days').value,
+            balance: document.getElementById('new_balance').value
         });
-
         try {
-            const res = await fetch(`${API_BASE}/admin/create_reseller`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: body
-            });
+            const res = await fetch(`${API_BASE}/admin/create_reseller`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
             alert(data.msg || 'Created');
             if (data.success) {
@@ -599,77 +245,39 @@
                 document.getElementById('new_pass').value = '';
                 loadResellers();
             }
-        } catch (err) {
-            alert('Error creating reseller');
-        }
+        } catch (e) { alert("Error"); }
     }
 
-    function openRechargeModal(username) {
-        activeRechargeUser = username;
-        document.getElementById('modalUsername').innerText = String(username).toUpperCase();
+    function openRechargeModal(user) {
+        activeRechargeUser = user;
+        document.getElementById('modalUsername').innerText = String(user).toUpperCase();
         document.getElementById('rechargeAmount').value = '';
         document.getElementById('rechargeModal').style.display = 'flex';
     }
 
     function closeModal() {
         document.getElementById('rechargeModal').style.display = 'none';
-        activeRechargeUser = '';
     }
 
     async function submitRecharge() {
         const amt = document.getElementById('rechargeAmount').value;
-        if (!amt || parseFloat(amt) <= 0) {
-            alert('Valid amount daalein!');
-            return;
-        }
-
-        const body = new URLSearchParams({
-            username: activeRechargeUser,
-            amount: amt
-        });
-
+        if (!amt || parseFloat(amt) <= 0) return alert("Valid amount daalein!");
+        const body = new URLSearchParams({ username: activeRechargeUser, amount: amt });
         try {
-            const res = await fetch(`${API_BASE}/admin/recharge_reseller`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: body
-            });
+            const res = await fetch(`${API_BASE}/admin/recharge_reseller`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
-            if (data.success) {
-                alert(`₹${amt} successfully add ho gaya!`);
-                closeModal();
-                loadResellers();
-            } else {
-                alert(data.msg || 'Recharge fail');
-            }
-        } catch (err) {
-            alert('Error recharging');
-        }
+            if (data.success) { alert("Recharged!"); closeModal(); loadResellers(); }
+        } catch (e) { alert("Error"); }
     }
 
-    async function deleteReseller(username) {
-        if (!confirm(`Kya aap [${String(username).toUpperCase()}] ko permanently delete karna chahte hain?`)) {
-            return;
-        }
-
-        const body = new URLSearchParams({ username: username });
-
+    async function deleteReseller(user) {
+        if (!confirm(`Delete reseller [${user}]?`)) return;
+        const body = new URLSearchParams({ username: user });
         try {
-            const res = await fetch(`${API_BASE}/admin/delete_reseller`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: body
-            });
+            const res = await fetch(`${API_BASE}/admin/delete_reseller`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
-            if (data.success) {
-                alert('Deleted successfully');
-                loadResellers();
-            } else {
-                alert(data.msg || 'Delete fail');
-            }
-        } catch (err) {
-            alert('Error deleting');
-        }
+            if (data.success) { alert("Deleted!"); loadResellers(); }
+        } catch (e) { alert("Error"); }
     }
 
     window.onload = loadAll;
