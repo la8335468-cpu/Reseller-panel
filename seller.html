@@ -14,51 +14,367 @@
             --primary: #4F6BFF;
             --success: #10B981;
             --danger: #EF4444;
+            --warning: #F59E0B;
             --debit-badge: #FF4D6D;
             --text-main: #FFFFFF;
             --text-muted: #8E96B5;
             --border: #222744;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); padding: 16px 14px 85px 14px; min-height: 100vh; }
-        .container { max-width: 600px; margin: 0 auto; }
-        #loginView { max-width: 380px; margin: 80px auto; background-color: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px 20px; }
-        .login-title { font-size: 20px; font-weight: 800; text-align: center; color: var(--primary); margin-bottom: 22px; }
-        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .panel-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: #60A5FA; }
-        .user-logout-row { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--text-muted); }
-        .btn-logout { background: none; border: none; color: #EF4444; font-weight: 700; cursor: pointer; }
-        .balance-card { background: linear-gradient(135deg, #181C38, #14172E); border: 1px solid var(--border); border-radius: 16px; padding: 20px 18px; margin-bottom: 16px; }
-        .balance-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
-        .balance-amount { font-size: 28px; font-weight: 800; color: #FFFFFF; margin-bottom: 6px; }
-        .balance-subtext { font-size: 12px; color: #7983A8; }
-        .card { background-color: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 16px; }
-        .card-header-title { font-size: 14px; font-weight: 700; color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .input-group { margin-bottom: 12px; }
-        .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
-        .input-group input { width: 100%; background-color: var(--input); border: 1px solid var(--border); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 13px; outline: none; }
-        .btn-submit { width: 100%; background-color: var(--primary); color: #fff; border: none; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
-        .tx-table-container { overflow-x: auto; }
-        .tx-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .tx-table th { text-align: left; padding: 10px 8px; color: #6C7598; font-size: 11px; font-weight: 700; border-bottom: 1px solid var(--border); }
-        .tx-table td { padding: 12px 8px; border-bottom: 1px solid #1A1E38; }
-        .tx-date { color: var(--text-main); font-weight: 500; white-space: nowrap; }
-        .badge-tx { display: inline-flex; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
-        .badge-debit { background-color: rgba(255, 77, 109, 0.15); color: var(--debit-badge); border: 1px solid rgba(255, 77, 109, 0.25); }
-        .badge-credit { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.25); }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 16px 14px 85px 14px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 1. LOGIN SCREEN */
+        #loginView {
+            max-width: 380px;
+            margin: 80px auto;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .login-title {
+            font-size: 20px;
+            font-weight: 800;
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 22px;
+        }
+
+        /* Top Header */
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #60A5FA;
+        }
+
+        .user-logout-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .btn-logout {
+            background: none;
+            border: none;
+            color: #EF4444;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, #181C38, #14172E);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 18px;
+            margin-bottom: 16px;
+        }
+
+        .balance-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 6px;
+        }
+
+        .balance-subtext {
+            font-size: 12px;
+            color: #7983A8;
+        }
+
+        /* Card Container */
+        .card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        .card-header-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        /* Forms */
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            background-color: var(--input);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            outline: none;
+            color-scheme: dark;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-trial {
+            background-color: #F59E0B;
+            color: #0E1022;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Table (Screenshot Match) */
+        .tx-table-container {
+            overflow-x: auto;
+        }
+
+        .tx-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .tx-table th {
+            text-align: left;
+            padding: 10px 8px;
+            color: #6C7598;
+            font-size: 11px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tx-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #1A1E38;
+        }
+
+        .tx-date {
+            color: var(--text-main);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .badge-tx {
+            display: inline-flex;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        .badge-debit {
+            background-color: rgba(255, 77, 109, 0.15);
+            color: var(--debit-badge);
+            border: 1px solid rgba(255, 77, 109, 0.25);
+        }
+
+        .badge-credit {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
         .tx-amount-debit { color: #FF5A79; font-weight: 700; white-space: nowrap; }
         .tx-amount-credit { color: #34D399; font-weight: 700; white-space: nowrap; }
         .tx-details { color: #8E96B5; font-family: monospace; font-size: 11px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background-color: #121528; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #6C7598; cursor: pointer; height: 100%; }
-        .nav-item.active { color: #FFFFFF; }
-        .nav-item.active .nav-btn-pill { background-color: #4F6BFF; color: #FFFFFF; padding: 6px 18px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
-        .key-box { background-color: var(--card-inner); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
-        .key-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .key-code { font-family: monospace; font-size: 14px; font-weight: 700; color: #60A5FA; }
-        .btn-act { border: none; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
+
+        /* Keys UI */
+        .key-box {
+            background-color: var(--card-inner);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .key-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .key-code {
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: #60A5FA;
+        }
+
+        .badge-status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 5px;
+        }
+
+        .st-unused { background: rgba(56, 189, 248, 0.15); color: #38BDF8; }
+        .st-active { background: rgba(16, 185, 129, 0.15); color: #10B981; }
+        .st-expired { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
+        .st-frozen { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
+
+        .key-actions-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-act {
+            border: none;
+            padding: 6px 11px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
         .btn-copy { background: rgba(79, 107, 255, 0.2); color: #818CF8; }
+        .btn-reset { background: rgba(245, 158, 11, 0.2); color: #F59E0B; }
+        .btn-edit { background: rgba(56, 189, 248, 0.2); color: #38BDF8; }
         .btn-del { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            z-index: 200;
+        }
+
+        .modal-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .modal-card h3 {
+            font-size: 15px;
+            margin-bottom: 14px;
+            color: #60A5FA;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            background-color: #121528;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #6C7598;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .nav-item.active { color: #FFFFFF; }
+        .nav-item.active .nav-btn-pill {
+            background-color: #4F6BFF;
+            color: #FFFFFF;
+            padding: 6px 18px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
     </style>
 </head>
 <body>
@@ -128,9 +444,16 @@
 
         <!-- TAB 2: KEYS VIEW -->
         <div id="tabKeysView" style="display: none;">
+            
+            <!-- 10 MINUTES TRIAL FAST BUTTON -->
+            <button type="button" class="btn-submit btn-trial" onclick="generateTrialKey()">
+                ⚡ GENERATE 10 MINUTES TRIAL KEY (FREE ₹0)
+            </button>
+
+            <!-- Standard Key Generator Card -->
             <div class="card">
                 <div class="card-header-title">
-                    <span>🔑 Generate VIP Key</span>
+                    <span>🔑 Generate Regular VIP Key</span>
                     <span style="font-size: 12px; color: #60A5FA; cursor: pointer;" onclick="makeRandomKey()">⚡ Random Key</span>
                 </div>
                 <form onsubmit="generateKey(event)">
@@ -150,6 +473,7 @@
                 </form>
             </div>
 
+            <!-- Keys List -->
             <div class="card">
                 <div class="card-header-title">
                     <span>Generated Keys</span>
@@ -181,6 +505,31 @@
 
 </div>
 
+<!-- EDIT KEY MODAL -->
+<div class="modal" id="editModal">
+    <div class="modal-card">
+        <h3>Edit Key: <span id="editKeyName"></span></h3>
+        <div class="input-group">
+            <label>Change Status</label>
+            <select id="editStatus">
+                <option value="unused">UNUSED</option>
+                <option value="active">ACTIVE</option>
+                <option value="frozen">FROZEN (Block)</option>
+            </select>
+        </div>
+        <div style="margin-top: 10px; margin-bottom: 14px;">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #F59E0B; cursor: pointer;">
+                <input type="checkbox" id="editResetHwid" style="width: 16px; height: 16px;">
+                Reset Device HWID Binding
+            </label>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-act" onclick="closeEditModal()" style="background: transparent; color: var(--text-muted);">Cancel</button>
+            <button class="btn-act btn-edit" onclick="submitEditKey()">Save Changes</button>
+        </div>
+    </div>
+</div>
+
 <!-- BOTTOM NAVIGATION BAR -->
 <div class="bottom-nav" id="bottomNavBar" style="display: none;">
     <div class="nav-item" id="navItemKeys" onclick="switchTab('keys')"><span style="font-size:16px;">🔑</span><span>Keys</span></div>
@@ -193,6 +542,7 @@
     let currentUser = localStorage.getItem('reseller_user') || '';
     let currentServerTime = 0;
     let calculatedTimestamp = 0;
+    let editingKey = '';
 
     function switchTab(tab) {
         document.getElementById('tabBalanceView').style.display = tab === 'balance' ? 'block' : 'none';
@@ -333,19 +683,40 @@
         keys.forEach(k => {
             const exp = k.expiry_timestamp || 0;
             const isExp = exp > 0 && realServerTime > exp;
+            let status = k.status || 'unused';
+            if (isExp) status = 'expired';
+
+            let badgeClass = 'st-unused';
+            if (status === 'active') badgeClass = 'st-active';
+            if (status === 'expired') badgeClass = 'st-expired';
+            if (status === 'frozen') badgeClass = 'st-frozen';
+
+            let expDisplay = 'No Expiry';
+            if (exp > 0) {
+                const expDate = new Date(exp);
+                // Agar 10 min trial hai toh time show karein
+                if (k.plan && k.plan.includes('Trial')) {
+                    expDisplay = expDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " (Today)";
+                } else {
+                    expDisplay = expDate.toLocaleDateString('en-GB');
+                }
+            }
+
             html += `
                 <div class="key-box">
                     <div class="key-header">
                         <span class="key-code">${k.key}</span>
-                        <span style="font-size:11px; font-weight:700; color:${isExp ? '#EF4444' : '#10B981'};">${isExp ? 'EXPIRED' : 'ACTIVE'}</span>
+                        <span class="badge-status ${badgeClass}">${status.toUpperCase()}</span>
                     </div>
                     <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
-                        Plan: <b>${k.plan || 'Custom'}</b> | Exp: <b>${exp > 0 ? new Date(exp).toLocaleDateString('en-GB') : 'No Expiry'}</b><br>
-                        HWID: ${k.hwid ? k.hwid.slice(0, 16) + '...' : 'Khali'}
+                        Plan: <b style="color:#fff;">${k.plan || 'Custom'}</b> | Exp: <b style="color:#fff;">${expDisplay}</b><br>
+                        HWID: <span style="font-family:monospace;">${k.hwid ? k.hwid.slice(0, 18) + '...' : 'Not Bound (Khali)'}</span>
                     </div>
-                    <div style="display:flex; justify-content:flex-end; gap:8px;">
-                        <button class="btn-act btn-copy" onclick="navigator.clipboard.writeText('${k.key}').then(() => alert('Copied!'))">Copy</button>
-                        <button class="btn-act btn-del" onclick="deleteKey('${k.key}')">Delete</button>
+                    <div class="key-actions-row">
+                        <button class="btn-act btn-copy" onclick="copyKey('${k.key}')">📋 Copy</button>
+                        <button class="btn-act btn-reset" onclick="quickResetHwid('${k.key}')">🔄 Reset HWID</button>
+                        <button class="btn-act btn-edit" onclick="openEditModal('${k.key}', '${status}')">✏️ Edit</button>
+                        <button class="btn-act btn-del" onclick="deleteKey('${k.key}')">🗑️ Delete</button>
                     </div>
                 </div>
             `;
@@ -353,6 +724,39 @@
         container.innerHTML = html;
     }
 
+    function copyKey(key) {
+        navigator.clipboard.writeText(key).then(() => alert(`Key Copied: ${key}`));
+    }
+
+    // 10 MINUTES FREE TRIAL GENERATE
+    async function generateTrialKey() {
+        if (!confirm("10 Minutes Free Trial Key banani hai?")) return;
+
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        let r1 = "", r2 = "";
+        for (let i = 0; i < 4; i++) r1 += chars.charAt(Math.floor(Math.random() * chars.length));
+        for (let i = 0; i < 4; i++) r2 += chars.charAt(Math.floor(Math.random() * chars.length));
+        const trialKey = "TRIAL-" + r1 + "-" + r2;
+
+        const body = new URLSearchParams({
+            username: currentUser,
+            key: trialKey,
+            plan: 'trial'
+        });
+
+        try {
+            const res = await fetch(`${API_BASE}/reseller/generate_key`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+            const data = await res.json();
+            if (data.success) {
+                alert(`⚡ 10 MIN TRIAL KEY GENERATED!\nKey: ${trialKey}\nValidity: 10 Minutes\nCost: ₹0 (Free)`);
+                loadDashboard();
+            } else {
+                alert(data.msg || "Trial generation failed!");
+            }
+        } catch (err) { alert("Error generating trial key"); }
+    }
+
+    // STANDARD KEY GENERATE
     async function generateKey(e) {
         e.preventDefault();
         const key = document.getElementById('new_key').value.trim().toUpperCase();
@@ -369,6 +773,52 @@
                 switchTab('balance');
             } else { alert(data.msg || "Failed"); }
         } catch (err) { alert("Error generating key"); }
+    }
+
+    // QUICK RESET HWID
+    async function quickResetHwid(key) {
+        if (!confirm(`Key [${key}] ka Device HWID reset karein?`)) return;
+        const body = new URLSearchParams({ username: currentUser, key: key, reset_hwid: 'true' });
+        try {
+            const res = await fetch(`${API_BASE}/reseller/edit_key`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+            const data = await res.json();
+            alert(data.msg || "HWID Reset Successful!");
+            loadDashboard();
+        } catch (err) { alert("Reset fail!"); }
+    }
+
+    // EDIT MODAL LOGIC
+    function openEditModal(key, curStatus) {
+        editingKey = key;
+        document.getElementById('editKeyName').innerText = key;
+        document.getElementById('editStatus').value = (curStatus === 'expired') ? 'unused' : curStatus;
+        document.getElementById('editResetHwid').checked = false;
+        document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+        editingKey = '';
+    }
+
+    async function submitEditKey() {
+        const st = document.getElementById('editStatus').value;
+        const resetHwid = document.getElementById('editResetHwid').checked;
+
+        const body = new URLSearchParams({
+            username: currentUser,
+            key: editingKey,
+            status: st,
+            reset_hwid: resetHwid ? 'true' : 'false'
+        });
+
+        try {
+            const res = await fetch(`${API_BASE}/reseller/edit_key`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+            const data = await res.json();
+            alert(data.msg || "Updated");
+            closeEditModal();
+            loadDashboard();
+        } catch (err) { alert("Edit fail!"); }
     }
 
     async function deleteKey(key) {
