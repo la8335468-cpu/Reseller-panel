@@ -18,7 +18,7 @@ def after_request(response):
 
 FIREBASE_URL = "https://reseller-c0cf4-default-rtdb.firebaseio.com"
 
-# --- BUILT-IN IST DATETIME (NO PYTZ NEEDED) ---
+# --- BUILT-IN IST DATETIME (NO PYTZ DEPENDENCY) ---
 def get_ist_datetime_str():
     try:
         ist_zone = timezone(timedelta(hours=5, minutes=30))
@@ -60,7 +60,7 @@ def add_transaction(user, tx_type, amount, details):
     tx_data = {
         "timestamp": now_ts,
         "date": get_ist_datetime_str(),
-        "type": tx_type,
+        "type": tx_type,  # 'debit' ya 'credit'
         "amount": float(amount),
         "details": details
     }
@@ -253,8 +253,10 @@ def update_contact():
         return jsonify({"success": False, "msg": "Username missing!"}), 400
 
     update_payload = {}
-    if wa: update_payload["whatsapp"] = wa
-    if tg: update_payload["telegram"] = tg
+    if wa:
+        update_payload["whatsapp"] = wa
+    if tg:
+        update_payload["telegram"] = tg
 
     fb_patch(f"resellers/{user}", update_payload)
 
@@ -266,34 +268,50 @@ def update_contact():
 
     return jsonify({"success": True, "msg": "WhatsApp aur Telegram links update ho gaye!"})
 
+# KEY GENERATION (1 DIN = 100 RS + 10 MIN TRIAL SUPPORT)
 @app.route('/reseller/generate_key', methods=['POST'])
 def reseller_generate_key():
     user = request.form.get('username', '').strip().lower()
     key = request.form.get('key', '').strip().upper()
+    plan = request.form.get('plan', '').strip().lower()
     custom_exp = request.form.get('expiry_timestamp', '').strip()
 
     now = int(time.time() * 1000)
 
-    try:
-        exp = int(custom_exp)
-    except Exception:
-        exp = now + (24 * 3600 * 1000)
+    # 1. 10 Minutes Free Trial Logic
+    if plan == 'trial':
+        exp = now + (10 * 60 * 1000)  # Exact 10 Minutes
+        cost = 0.0
+        plan_name = "10 Min Trial"
+        days_desc = "10 Min Trial"
+    else:
+        # 2. Standard Date-Based Logic (1 Din = ₹100)
+        try:
+            exp = int(custom_exp)
+        except Exception:
+            exp = now + (24 * 3600 * 1000)
 
-    if exp <= now:
-        return jsonify({"success": False, "msg": "Expiry date aane wale samay ki select karein!"}), 400
+        if exp <= now:
+            return jsonify({"success": False, "msg": "Expiry date aane wale samay ki select karein!"}), 400
 
-    diff_ms = exp - now
-    days = max(1, math.ceil(diff_ms / (24 * 3600 * 1000.0)))
-    cost = float(days * 100.0)
+        diff_ms = exp - now
+        days = max(1, math.ceil(diff_ms / (24 * 3600 * 1000.0)))
+        cost = float(days * 100.0)
+        plan_name = f"{days} Day{'s' if days > 1 else ''}"
+        days_desc = f"day × {days}"
 
     reseller = fb_get(f"resellers/{user}")
-    if not reseller or not isinstance(reseller, dict) or float(reseller.get('balance', 0.0)) < cost:
-        return jsonify({"success": False, "msg": f"Balance kam hai! ₹{cost:.0f} chahiye ({days} Din ke liye)."}), 400
+    if not reseller or not isinstance(reseller, dict):
+        return jsonify({"success": False, "msg": "Reseller not found"}), 404
 
-    new_bal = float(reseller.get('balance', 0.0)) - cost
-    fb_patch(f"resellers/{user}", {"balance": new_bal})
+    # Wallet Balance Check
+    if cost > 0 and float(reseller.get('balance', 0.0)) < cost:
+        return jsonify({"success": False, "msg": f"Balance kam hai! ₹{cost:.0f} chahiye."}), 400
 
-    plan_name = f"{days} Day{'s' if days > 1 else ''}"
+    # Balance Deduction
+    if cost > 0:
+        new_bal = float(reseller.get('balance', 0.0)) - cost
+        fb_patch(f"resellers/{user}", {"balance": new_bal})
 
     key_data = {
         "key": key,
@@ -305,8 +323,11 @@ def reseller_generate_key():
     }
 
     if fb_put(f"keys/{key}", key_data):
-        add_transaction(user, "debit", cost, f"{key} day × {days}")
-        return jsonify({"success": True, "key": key, "cost": cost, "days": days})
+        if cost > 0:
+            add_transaction(user, "debit", cost, f"{key} {days_desc}")
+        else:
+            add_transaction(user, "debit", 0.0, f"{key} (10 Min Trial)")
+        return jsonify({"success": True, "key": key, "cost": cost})
     return jsonify({"success": False, "msg": "Key generate fail!"}), 500
 
 @app.route('/reseller/edit_key', methods=['POST'])
@@ -321,8 +342,10 @@ def reseller_edit_key():
         return jsonify({"success": False, "msg": "Key nahi mili!"}), 404
 
     updates = {}
-    if status: updates["status"] = status
-    if reset_hwid: updates["hwid"] = ""
+    if status:
+        updates["status"] = status
+    if reset_hwid:
+        updates["hwid"] = ""
 
     if fb_patch(f"keys/{key}", updates):
         return jsonify({"success": True, "msg": "Key update ho gayi!"})
