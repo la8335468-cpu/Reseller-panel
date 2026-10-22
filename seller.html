@@ -14,6 +14,7 @@
             --primary: #4F6BFF;
             --success: #10B981;
             --danger: #EF4444;
+            --warning: #F59E0B;
             --debit-badge: #FF4D6D;
             --text-main: #FFFFFF;
             --text-muted: #8E96B5;
@@ -38,6 +39,25 @@
         .container {
             max-width: 600px;
             margin: 0 auto;
+        }
+
+        #loginView {
+            max-width: 380px;
+            margin: 80px auto;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: block;
+        }
+
+        .login-title {
+            font-size: 20px;
+            font-weight: 800;
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 22px;
         }
 
         .panel-header {
@@ -101,6 +121,33 @@
             color: #7983A8;
         }
 
+        .stats-grid-2x2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .stat-box:hover, .stat-box.active-filter {
+            border-color: var(--primary);
+            background-color: #1a1f3c;
+        }
+
+        .stat-box-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .stat-box-val { font-size: 20px; font-weight: 800; color: #FFFFFF; margin-top: 6px; }
+
         .card {
             background-color: var(--card);
             border: 1px solid var(--border);
@@ -119,18 +166,8 @@
             margin-bottom: 14px;
         }
 
-        .input-group {
-            margin-bottom: 12px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
         .input-group input, .input-group select {
             width: 100%;
             background-color: var(--input);
@@ -153,7 +190,7 @@
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.15s;
+            transition: 0.2s;
         }
 
         .btn-trial {
@@ -166,56 +203,15 @@
             gap: 6px;
         }
 
-        .tx-table-container {
-            overflow-x: auto;
-        }
+        .tx-table-container { overflow-x: auto; }
+        .tx-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .tx-table th { text-align: left; padding: 10px 8px; color: #6C7598; font-size: 11px; font-weight: 700; border-bottom: 1px solid var(--border); }
+        .tx-table td { padding: 12px 8px; border-bottom: 1px solid #1A1E38; }
+        .tx-date { color: var(--text-main); font-weight: 500; white-space: nowrap; }
 
-        .tx-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-        }
-
-        .tx-table th {
-            text-align: left;
-            padding: 10px 8px;
-            color: #6C7598;
-            font-size: 11px;
-            font-weight: 700;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .tx-table td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #1A1E38;
-        }
-
-        .tx-date {
-            color: var(--text-main);
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .badge-tx {
-            display: inline-flex;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            white-space: nowrap;
-        }
-
-        .badge-debit {
-            background-color: rgba(255, 77, 109, 0.15);
-            color: var(--debit-badge);
-            border: 1px solid rgba(255, 77, 109, 0.25);
-        }
-
-        .badge-credit {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-        }
+        .badge-tx { display: inline-flex; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+        .badge-debit { background-color: rgba(255, 77, 109, 0.15); color: var(--debit-badge); border: 1px solid rgba(255, 77, 109, 0.25); }
+        .badge-credit { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.25); }
 
         .tx-amount-debit { color: #FF5A79; font-weight: 700; white-space: nowrap; }
         .tx-amount-credit { color: #34D399; font-weight: 700; white-space: nowrap; }
@@ -236,262 +232,213 @@
             margin-bottom: 6px;
         }
 
-        .key-code {
-            font-family: monospace;
-            font-size: 14px;
-            font-weight: 700;
-            color: #60A5FA;
-        }
+        .key-code { font-family: monospace; font-size: 14px; font-weight: 700; color: #60A5FA; }
 
-        .badge-status {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 7px;
-            border-radius: 5px;
-        }
-
+        .badge-status { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 5px; }
         .st-unused { background: rgba(56, 189, 248, 0.15); color: #38BDF8; }
         .st-active { background: rgba(16, 185, 129, 0.15); color: #10B981; }
         .st-expired { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
         .st-frozen { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
 
-        .key-actions-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
-            justify-content: flex-end;
-        }
-
-        .btn-act {
-            border: none;
-            padding: 6px 11px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
+        .key-actions-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; justify-content: flex-end; }
+        .btn-act { border: none; padding: 6px 11px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
         .btn-copy { background: rgba(79, 107, 255, 0.2); color: #818CF8; }
         .btn-reset { background: rgba(245, 158, 11, 0.2); color: #F59E0B; }
         .btn-edit { background: rgba(56, 189, 248, 0.2); color: #38BDF8; }
         .btn-del { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
 
-        .profile-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 11px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-        }
-
-        .profile-row:last-child {
-            border-bottom: none;
-        }
-
-        .profile-title {
-            color: var(--text-muted);
-        }
-
-        .profile-value {
-            font-weight: 700;
-            color: #FFFFFF;
-        }
+        .profile-row { display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .profile-row:last-child { border-bottom: none; }
+        .profile-title { color: var(--text-muted); }
+        .profile-value { font-weight: 700; color: #FFFFFF; }
 
         .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            z-index: 200;
+            display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
+            justify-content: center; align-items: center; padding: 16px; z-index: 200;
         }
-
-        .modal-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 22px;
-            width: 100%;
-            max-width: 360px;
-        }
-
-        .modal-card h3 {
-            font-size: 15px;
-            margin-bottom: 14px;
-            color: #60A5FA;
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 14px;
-        }
+        .modal-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; width: 100%; max-width: 360px; }
+        .modal-card h3 { font-size: 15px; margin-bottom: 14px; color: #60A5FA; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
 
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 65px;
-            background-color: #121528;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 100;
+            position: fixed; bottom: 0; left: 0; right: 0; height: 65px;
+            background-color: #121528; border-top: 1px solid var(--border);
+            display: none; justify-content: space-around; align-items: center; z-index: 100;
         }
-
         .nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: #6C7598;
-            cursor: pointer;
-            height: 100%;
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 600; color: #6C7598; cursor: pointer; height: 100%;
         }
-
         .nav-item.active { color: #FFFFFF; }
         .nav-item.active .nav-btn-pill {
-            background-color: #4F6BFF;
-            color: #FFFFFF;
-            padding: 6px 18px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            background-color: #4F6BFF; color: #FFFFFF; padding: 6px 18px; border-radius: 20px;
+            display: flex; align-items: center; gap: 6px;
         }
     </style>
 </head>
 <body>
 
-<div class="container" id="dashView">
+<div class="container">
 
-    <div class="panel-header">
-        <div>
-            <div class="panel-title">🏪 Seller Panel</div>
-            <div style="font-size: 11px; color: #6C7598; margin-top: 2px;" id="dispDateTime">--</div>
-        </div>
-        <div class="user-logout-row">
-            <span id="dispUser">👤 User</span>
-            <button class="btn-logout" onclick="doLogout()">↪ Logout</button>
-        </div>
+    <!-- LOGIN SCREEN -->
+    <div id="loginView">
+        <h2 class="login-title">RESELLER LOGIN</h2>
+        <form onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label>User ID</label>
+                <input type="text" id="log_user" placeholder="Enter reseller ID" required>
+            </div>
+            <div class="input-group" style="margin-bottom: 18px;">
+                <label>Password</label>
+                <input type="password" id="log_pass" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn-submit">LOGIN TO DASHBOARD</button>
+        </form>
     </div>
 
-    <!-- FOLDER 1: 💳 WALLET[span_7](start_span)[span_7](end_span) -->
-    <div id="tabWalletView">
-        <div class="balance-card">
-            <div class="balance-label">💳 AAPKA BALANCE</div>
-            <div class="balance-amount" id="statBalance">₹0.00</div>
-            <div class="balance-subtext">Key generate karne par price balance se cut hoga</div>
-        </div>
+    <!-- DASHBOARD VIEW -->
+    <div id="dashView" style="display: none;">
 
-        <div class="card">
-            <div class="card-header-title">
-                <span>⇄ Transactions</span>
-                <span id="txCountBadge" style="color: #6C7598; font-size: 12px;">(0)</span>
+        <div class="panel-header">
+            <div>
+                <div class="panel-title">🏪 Seller Panel</div>
+                <div style="font-size: 11px; color: #6C7598; margin-top: 2px;" id="dispDateTime">--</div>
             </div>
-            <div class="tx-table-container">
-                <table class="tx-table">
-                    <thead>
-                        <tr>
-                            <th>DATE</th>
-                            <th>TYPE</th>
-                            <th>AMOUNT</th>
-                            <th>DETAILS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="txTableBody">
-                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:25px;">Loading transactions...</td></tr>
-                    </tbody>
-                </table>
+            <div class="user-logout-row">
+                <span id="dispUser">👤 User</span>
+                <button class="btn-logout" onclick="doLogout()">↪ Logout</button>
             </div>
         </div>
-    </div>
 
-    <!-- FOLDER 2: 🔑 KEYS[span_8](start_span)[span_8](end_span) -->
-    <div id="tabKeysView" style="display: none;">
-        <button type="button" class="btn-submit btn-trial" onclick="generateTrialKey()">
-            ⚡ GENERATE 10 MINUTES TRIAL KEY (FREE ₹0)
-        </button>
-
-        <div class="card">
-            <div class="card-header-title">
-                <span>🔑 Generate Regular VIP Key</span>
-                <span style="font-size: 12px; color: #60A5FA; cursor: pointer;" onclick="makeRandomKey()">⚡ Random Key</span>
+        <!-- FOLDER 1: WALLET -->
+        <div id="tabWalletView">
+            <div class="balance-card">
+                <div class="balance-label">💳 AAPKA BALANCE</div>
+                <div class="balance-amount" id="statBalance">₹0.00</div>
+                <div class="balance-subtext">Key generate karne par price balance se cut hoga</div>
             </div>
-            <form onsubmit="generateKey(event)">
-                <div class="input-group">
-                    <label>License Key</label>
-                    <input type="text" id="new_key" placeholder="VIP-XXXX-XXXX" required>
+
+            <div class="card">
+                <div class="card-header-title">
+                    <span>⇄ Transactions</span>
+                    <span id="txCountBadge" style="color: #6C7598; font-size: 12px;">(0)</span>
                 </div>
-                <div class="input-group">
-                    <label>Select Expiry Date <span id="daysSummary" style="color: #60A5FA;">(1 Din)</span></label>
-                    <input type="date" id="exp_date" required onchange="calculateAutoPrice()">
+                <div class="tx-table-container">
+                    <table class="tx-table">
+                        <thead>
+                            <tr>
+                                <th>DATE</th>
+                                <th>TYPE</th>
+                                <th>AMOUNT</th>
+                                <th>DETAILS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="txTableBody">
+                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:25px;">Loading...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="input-group">
-                    <label>Auto Price (₹100/Din - Locked)</label>
-                    <input type="number" id="key_cost" value="100" readonly style="background-color: #121526; color: #34D399; font-weight: 800; cursor: not-allowed;">
-                </div>
-                <button type="submit" class="btn-submit">CREATE LICENSE KEY</button>
-            </form>
-        </div>
-
-        <div class="card">
-            <div class="card-header-title">
-                <span>My Generated Keys</span>
-                <button class="btn-act btn-copy" onclick="loadDashboard()">REFRESH</button>
-            </div>
-            <div id="keysContainer"><div style="text-align:center; color:var(--text-muted); padding:20px;">Loading keys...</div></div>
-        </div>
-    </div>
-
-    <!-- FOLDER 3: 👤 PROFILE[span_9](start_span)[span_9](end_span) -->
-    <div id="tabProfileView" style="display: none;">
-        <div class="card">
-            <div class="card-header-title">👤 Reseller Profile</div>
-            <div class="profile-row">
-                <span class="profile-title">Username:</span>
-                <span class="profile-value" id="profUsername">--</span>
-            </div>
-            <div class="profile-row">
-                <span class="profile-title">Account Status:</span>
-                <span class="profile-value" style="color: #10B981;" id="profStatus">ACTIVE</span>
-            </div>
-            <div class="profile-row">
-                <span class="profile-title">Account Validity:</span>
-                <span class="profile-value" id="profExpiry">--</span>
-            </div>
-            <div class="profile-row">
-                <span class="profile-title">Total Keys Generated:</span>
-                <span class="profile-value" style="color: #60A5FA;" id="profTotalKeys">0</span>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header-title">📱 App Dialog Contact Links</div>
-            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">
-                Customer ke login popup par dikhne wale direct chat links:
+        <!-- FOLDER 2: KEYS -->
+        <div id="tabKeysView" style="display: none;">
+            <div class="stats-grid-2x2">
+                <div class="stat-box active-filter" id="filterAll" onclick="setFilter('all')">
+                    <span class="stat-box-title">Total Keys</span>
+                    <span class="stat-box-val" id="statTotalKeys" style="color:#60A5FA;">0</span>
+                </div>
+                <div class="stat-box" id="filterActive" onclick="setFilter('active')">
+                    <span class="stat-box-title">Active</span>
+                    <span class="stat-box-val" id="statActiveKeys" style="color:#10B981;">0</span>
+                </div>
+                <div class="stat-box" id="filterBlocked" onclick="setFilter('blocked')">
+                    <span class="stat-box-title">Blocked</span>
+                    <span class="stat-box-val" id="statBlockedKeys" style="color:#F59E0B;">0</span>
+                </div>
+                <div class="stat-box" id="filterExpired" onclick="setFilter('expired')">
+                    <span class="stat-box-title">Expired</span>
+                    <span class="stat-box-val" id="statExpiredKeys" style="color:#EF4444;">0</span>
+                </div>
+                <div class="stat-box" id="filterInactive" onclick="setFilter('inactive')" style="grid-column: span 2;">
+                    <span class="stat-box-title">Inactive (Unused)</span>
+                    <span class="stat-box-val" id="statInactiveKeys" style="color:#38BDF8;">0</span>
+                </div>
             </div>
-            <form onsubmit="updateContactLinks(event)">
-                <div class="input-group">
-                    <label>WhatsApp Link / Number</label>
-                    <input type="text" id="contact_whatsapp" placeholder="https://wa.me/919999999999" required>
+
+            <button type="button" class="btn-submit btn-trial" onclick="generateTrialKey()">
+                ⚡ GENERATE 10 MINUTES TRIAL KEY (FREE ₹0)
+            </button>
+
+            <div class="card">
+                <div class="card-header-title">
+                    <span>🔑 Generate Regular VIP Key</span>
+                    <span style="font-size: 12px; color: #60A5FA; cursor: pointer;" onclick="makeRandomKey()">⚡ Random</span>
                 </div>
-                <div class="input-group">
-                    <label>Telegram Link / Username</label>
-                    <input type="text" id="contact_telegram" placeholder="https://t.me/your_username" required>
+                <form onsubmit="generateKey(event)">
+                    <div class="input-group">
+                        <label>License Key</label>
+                        <input type="text" id="new_key" placeholder="VIP-XXXX-XXXX" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Expiry Duration / Plan</label>
+                        <select id="quick_expiry" onchange="onQuickExpiryChange()">
+                            <option value="never">Never (Lifetime)</option>
+                            <option value="1h">1 Hour</option>
+                            <option value="2h">2 Hours</option>
+                            <option value="12h">12 Hours</option>
+                            <option value="1d" selected>1 Day</option>
+                            <option value="7d">7 Days</option>
+                            <option value="15d">15 Days</option>
+                            <option value="30d">30 Days</option>
+                        </select>
+                    </div>
+
+                    <!-- CUSTOM PRICE EDITABLE INPUT -->
+                    <div class="input-group">
+                        <label>Custom Price (₹) - Apni Marzi Se Set Karein</label>
+                        <input type="number" id="key_cost" value="100" min="0" required style="background-color: #080B18; color: #34D399; font-weight: 800;">
+                    </div>
+
+                    <button type="submit" class="btn-submit">CREATE LICENSE KEY</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-header-title">
+                    <span id="keysListTitle">My Generated Keys (All)</span>
+                    <button class="btn-act btn-copy" onclick="loadDashboard()">REFRESH</button>
                 </div>
-                <button type="submit" class="btn-submit">SAVE CONTACT LINKS</button>
-            </form>
+                <div id="keysContainer"><div style="text-align:center; color:var(--text-muted); padding:20px;">Loading keys...</div></div>
+            </div>
         </div>
+
+        <!-- FOLDER 3: PROFILE -->
+        <div id="tabProfileView" style="display: none;">
+            <div class="card">
+                <div class="card-header-title">👤 Reseller Profile</div>
+                <div class="profile-row"><span class="profile-title">Username:</span><span class="profile-value" id="profUsername">--</span></div>
+                <div class="profile-row"><span class="profile-title">Account Status:</span><span class="profile-value" style="color: #10B981;">ACTIVE</span></div>
+                <div class="profile-row"><span class="profile-title">Account Validity:</span><span class="profile-value" id="profExpiry">--</span></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header-title">📱 App Dialog Contact Links</div>
+                <form onsubmit="updateContactLinks(event)">
+                    <div class="input-group">
+                        <label>WhatsApp Link / Number</label>
+                        <input type="text" id="contact_whatsapp" placeholder="https://wa.me/919999999999" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Telegram Link / Username</label>
+                        <input type="text" id="contact_telegram" placeholder="https://t.me/your_username" required>
+                    </div>
+                    <button type="submit" class="btn-submit">SAVE CONTACT LINKS</button>
+                </form>
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -521,7 +468,7 @@
     </div>
 </div>
 
-<!-- 3 BOTTOM NAVIGATION FOLDERS[span_10](start_span)[span_10](end_span) -->
+<!-- BOTTOM NAVIGATION BAR -->
 <div class="bottom-nav" id="bottomNavBar">
     <div class="nav-item active" id="navItemWallet" onclick="switchFolder('wallet')">
         <div class="nav-btn-pill"><span>💳</span><span>Wallet</span></div>
@@ -539,22 +486,57 @@
     let currentUser = localStorage.getItem('reseller_user') || '';
     let currentServerTime = 0;
     let calculatedTimestamp = 0;
+    let calculatedPlanName = "1 Day";
     let editingKey = '';
+    
+    let allKeysData = [];
+    let currentFilter = 'all';
 
-    // Direct Portal Redirect on Logout
     function doLogout() {
         localStorage.removeItem('reseller_user');
-        window.location.replace('/'); // Instant redirect to License Manager Portal[span_11](start_span)[span_11](end_span)
+        currentUser = '';
+        document.getElementById('dashView').style.display = 'none';
+        document.getElementById('bottomNavBar').style.display = 'none';
+        document.getElementById('loginView').style.display = 'block';
     }
 
-    // Auth Guard
-    if (!currentUser) {
-        window.location.replace('/');
+    if (currentUser) {
+        showDashboard();
     } else {
+        showLogin();
+    }
+
+    function showLogin() {
+        document.getElementById('loginView').style.display = 'block';
+        document.getElementById('dashView').style.display = 'none';
+        document.getElementById('bottomNavBar').style.display = 'none';
+    }
+
+    function showDashboard() {
+        document.getElementById('loginView').style.display = 'none';
+        document.getElementById('dashView').style.display = 'block';
+        document.getElementById('bottomNavBar').style.display = 'flex';
         document.getElementById('dispUser').innerText = `👤 ${currentUser.toUpperCase()}`;
         document.getElementById('profUsername').innerText = `@${currentUser.toUpperCase()}`;
         makeRandomKey();
+        onQuickExpiryChange();
         loadDashboard();
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        const user = document.getElementById('log_user').value.trim().toLowerCase();
+        const pass = document.getElementById('log_pass').value.trim();
+        const body = new URLSearchParams({ username: user, password: pass });
+        try {
+            const res = await fetch(`${API_BASE}/reseller/login`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
+            const data = await res.json();
+            if (data.success) {
+                currentUser = user;
+                localStorage.setItem('reseller_user', user);
+                showDashboard();
+            } else { alert(data.msg || "Invalid User or Password!"); }
+        } catch (err) { alert("Server connect error!"); }
     }
 
     function switchFolder(folder) {
@@ -571,33 +553,56 @@
         document.getElementById('navItemProfile').innerHTML = folder === 'profile' ? '<div class="nav-btn-pill"><span>👤</span><span>Profile</span></div>' : '<span style="font-size:16px;">👤</span><span>Profile</span>';
     }
 
-    function initDatePicker() {
-        const baseDate = currentServerTime > 0 ? new Date(currentServerTime) : new Date();
-        baseDate.setDate(baseDate.getDate() + 1);
-        const yyyy = baseDate.getFullYear();
-        const mm = String(baseDate.getMonth() + 1).padStart(2, '0');
-        const dd = String(baseDate.getDate()).padStart(2, '0');
-        const minStr = `${yyyy}-${mm}-${dd}`;
-        const dateInput = document.getElementById('exp_date');
-        if (dateInput) {
-            dateInput.min = minStr;
-            dateInput.value = minStr;
-            calculateAutoPrice();
-        }
+    function setFilter(filterType) {
+        currentFilter = filterType;
+        ['All', 'Active', 'Blocked', 'Expired', 'Inactive'].forEach(f => {
+            const el = document.getElementById('filter' + f);
+            if (el) el.classList.remove('active-filter');
+        });
+        const selectedEl = document.getElementById('filter' + filterType.charAt(0).toUpperCase() + filterType.slice(1));
+        if (selectedEl) selectedEl.classList.add('active-filter');
+        renderKeysList();
     }
 
-    function calculateAutoPrice() {
-        const dateVal = document.getElementById('exp_date').value;
-        if (!dateVal) return;
-        const targetDate = new Date(dateVal + "T23:59:59");
-        const compareBase = currentServerTime > 0 ? currentServerTime : Date.now();
-        const diffMs = targetDate.getTime() - compareBase;
-        let days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-        if (days < 1) days = 1;
-        const totalCost = days * 100;
-        document.getElementById('key_cost').value = totalCost;
-        document.getElementById('daysSummary').innerText = `(${days} Din = ₹${totalCost})`;
-        calculatedTimestamp = targetDate.getTime();
+    function onQuickExpiryChange() {
+        const val = document.getElementById('quick_expiry').value;
+        const now = currentServerTime > 0 ? currentServerTime : Date.now();
+        let defaultCost = 100;
+
+        if (val === 'never') {
+            calculatedTimestamp = 0;
+            defaultCost = 3000;
+            calculatedPlanName = "Never (Lifetime)";
+        } else if (val === '1h') {
+            calculatedTimestamp = now + (3600 * 1000);
+            defaultCost = 5;
+            calculatedPlanName = "1 Hour";
+        } else if (val === '2h') {
+            calculatedTimestamp = now + (2 * 3600 * 1000);
+            defaultCost = 10;
+            calculatedPlanName = "2 Hours";
+        } else if (val === '12h') {
+            calculatedTimestamp = now + (12 * 3600 * 1000);
+            defaultCost = 50;
+            calculatedPlanName = "12 Hours";
+        } else if (val === '1d') {
+            calculatedTimestamp = now + (24 * 3600 * 1000);
+            defaultCost = 100;
+            calculatedPlanName = "1 Day";
+        } else if (val === '7d') {
+            calculatedTimestamp = now + (7 * 24 * 3600 * 1000);
+            defaultCost = 700;
+            calculatedPlanName = "7 Days";
+        } else if (val === '15d') {
+            calculatedTimestamp = now + (15 * 24 * 3600 * 1000);
+            defaultCost = 1500;
+            calculatedPlanName = "15 Days";
+        } else if (val === '30d') {
+            calculatedTimestamp = now + (30 * 24 * 3600 * 1000);
+            defaultCost = 3000;
+            calculatedPlanName = "30 Days";
+        }
+        document.getElementById('key_cost').value = defaultCost;
     }
 
     function makeRandomKey() {
@@ -625,18 +630,17 @@
             const exp = data.expiry_timestamp || 0;
             if (exp > 0) {
                 const remDays = Math.ceil((exp - (currentServerTime || Date.now())) / (1000 * 60 * 60 * 24));
-                document.getElementById('profExpiry').innerText = `${remDays} Din baaki (${new Date(exp).toLocaleDateString('en-GB')})`;
+                document.getElementById('profExpiry').innerText = `${remDays} Din baaki`;
             } else {
                 document.getElementById('profExpiry').innerText = "Unlimited / Lifetime";
             }
-            document.getElementById('profTotalKeys').innerText = (data.keys || []).length;
 
             renderTransactions(data.transactions || []);
-            renderKeys(data.keys || [], currentServerTime);
+            allKeysData = data.keys || [];
+            processAndRenderKeys();
 
             if (data.whatsapp) document.getElementById('contact_whatsapp').value = data.whatsapp;
             if (data.telegram) document.getElementById('contact_telegram').value = data.telegram;
-            initDatePicker();
         } catch (err) {}
     }
 
@@ -662,14 +666,59 @@
         tbody.innerHTML = html;
     }
 
-    function renderKeys(keys, realServerTime) {
+    function processAndRenderKeys() {
+        const realServerTime = currentServerTime > 0 ? currentServerTime : Date.now();
+        let total = allKeysData.length;
+        let active = 0, blocked = 0, expired = 0, inactive = 0;
+
+        allKeysData.forEach(k => {
+            const exp = k.expiry_timestamp || 0;
+            const isExp = exp > 0 && realServerTime > exp;
+            let status = k.status || 'unused';
+            if (isExp) status = 'expired';
+
+            if (status === 'active') active++;
+            else if (status === 'frozen' || status === 'blocked') blocked++;
+            else if (status === 'expired') expired++;
+            else if (status === 'unused') inactive++;
+        });
+
+        document.getElementById('statTotalKeys').innerText = total;
+        document.getElementById('statActiveKeys').innerText = active;
+        document.getElementById('statBlockedKeys').innerText = blocked;
+        document.getElementById('statExpiredKeys').innerText = expired;
+        document.getElementById('statInactiveKeys').innerText = inactive;
+
+        renderKeysList();
+    }
+
+    function renderKeysList() {
         const container = document.getElementById('keysContainer');
-        if (keys.length === 0) {
-            container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">Koi key generate nahi hui hai.</div>';
+        const realServerTime = currentServerTime > 0 ? currentServerTime : Date.now();
+        
+        let filteredKeys = allKeysData.filter(k => {
+            const exp = k.expiry_timestamp || 0;
+            const isExp = exp > 0 && realServerTime > exp;
+            let status = k.status || 'unused';
+            if (isExp) status = 'expired';
+
+            if (currentFilter === 'all') return true;
+            if (currentFilter === 'active') return status === 'active';
+            if (currentFilter === 'blocked') return status === 'frozen' || status === 'blocked';
+            if (currentFilter === 'expired') return status === 'expired';
+            if (currentFilter === 'inactive') return status === 'unused';
+            return true;
+        });
+
+        document.getElementById('keysListTitle').innerText = `My Generated Keys (${currentFilter.toUpperCase()})`;
+
+        if (filteredKeys.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">Is filter me koi key nahi hai.</div>';
             return;
         }
+
         let html = '';
-        keys.forEach(k => {
+        filteredKeys.forEach(k => {
             const exp = k.expiry_timestamp || 0;
             const isExp = exp > 0 && realServerTime > exp;
             let status = k.status || 'unused';
@@ -680,15 +729,7 @@
             if (status === 'expired') badgeClass = 'st-expired';
             if (status === 'frozen') badgeClass = 'st-frozen';
 
-            let expDisplay = 'No Expiry';
-            if (exp > 0) {
-                const expDate = new Date(exp);
-                if (k.plan && k.plan.includes('Trial')) {
-                    expDisplay = expDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + " (Today)";
-                } else {
-                    expDisplay = expDate.toLocaleDateString('en-GB');
-                }
-            }
+            let expDisplay = exp > 0 ? new Date(exp).toLocaleDateString('en-GB') : 'Never (Lifetime)';
 
             html += `
                 <div class="key-box">
@@ -697,14 +738,14 @@
                         <span class="badge-status ${badgeClass}">${status.toUpperCase()}</span>
                     </div>
                     <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
-                        Plan: <b style="color:#fff;">${k.plan || 'Custom'}</b> | Exp: <b style="color:#fff;">${expDisplay}</b><br>
+                        Plan: <b style="color:#fff;">${k.plan || calculatedPlanName}</b> | Exp: <b style="color:#fff;">${expDisplay}</b><br>
                         HWID: <span style="font-family:monospace;">${k.hwid ? k.hwid.slice(0, 18) + '...' : 'Not Bound (Khali)'}</span>
                     </div>
                     <div class="key-actions-row">
                         <button class="btn-act btn-copy" onclick="copyKey('${k.key}')">📋 Copy</button>
-                        <button class="btn-act btn-reset" onclick="quickResetHwid('${k.key}')">🔄 Reset HWID</button>
+                        <button class="btn-act btn-reset" onclick="quickResetHwid('${k.key}')">🔄 Reset</button>
                         <button class="btn-act btn-edit" onclick="openEditModal('${k.key}', '${status}')">✏️ Edit</button>
-                        <button class="btn-act btn-del" onclick="deleteKey('${k.key}')">🗑️ Delete</button>
+                        <button class="btn-act btn-del" onclick="deleteKey('${k.key}')">🗑️ Del</button>
                     </div>
                 </div>
             `;
@@ -717,7 +758,6 @@
     }
 
     async function generateTrialKey() {
-        if (!confirm("10 Minutes Free Trial Key banani hai?")) return;
         const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
         let r1 = "", r2 = "";
         for (let i = 0; i < 4; i++) r1 += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -731,24 +771,29 @@
             if (data.success) {
                 alert(`⚡ 10 MIN TRIAL KEY GENERATED!\nKey: ${trialKey}\nCost: ₹0 (Free)`);
                 loadDashboard();
-            } else {
-                alert(data.msg || "Trial generation failed!");
-            }
+            } else { alert(data.msg || "Trial failed!"); }
         } catch (err) { alert("Error generating trial key"); }
     }
 
     async function generateKey(e) {
         e.preventDefault();
         const key = document.getElementById('new_key').value.trim().toUpperCase();
-        if (!calculatedTimestamp) calculateAutoPrice();
-        const body = new URLSearchParams({ username: currentUser, key: key, expiry_timestamp: calculatedTimestamp.toString() });
+        const customPrice = document.getElementById('key_cost').value;
+        
+        const body = new URLSearchParams({
+            username: currentUser,
+            key: key,
+            expiry_timestamp: calculatedTimestamp.toString(),
+            plan: calculatedPlanName,
+            custom_cost: customPrice
+        });
+
         try {
             const res = await fetch(`${API_BASE}/reseller/generate_key`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: body });
             const data = await res.json();
             if (data.success) {
                 alert(`Key [${key}] generate ho gayi!\n₹${data.cost} deduct hua.`);
                 makeRandomKey();
-                initDatePicker();
                 loadDashboard();
                 switchFolder('wallet');
             } else { alert(data.msg || "Failed"); }
